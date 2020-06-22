@@ -169,8 +169,8 @@ export default class Physics {
     this.car.options.controlsSteeringSpeed = 0.005
     this.car.options.controlsSteeringMax = Math.PI * 0.17
     this.car.options.controlsSteeringQuad = false
-    this.car.options.controlsAcceleratinMaxSpeed = 0.055
-    this.car.options.controlsAcceleratinMaxSpeedBoost = 0.11
+    this.car.options.controlsAcceleratingMaxSpeed = 0.055
+    this.car.options.controlsAcceleratingMaxSpeedBoost = 0.11
     this.car.options.controlsAcceleratingSpeed = 2
     this.car.options.controlsAcceleratingSpeedBoost = 3.5
     this.car.options.controlsAcceleratingQuad = true
@@ -316,6 +316,276 @@ export default class Physics {
           this.car.model.container.add(wheel);
           this.car.model.wheels.push(wheel);
       }
+    }
+
+    /**
+     * Destroy
+     */
+    this.car.destroy = () => {
+      this.car.vehicle.removeFromWorld(this.world);
+      this.models.container.remove(this.car.model.container);
+    }
+
+    /**
+     * Recreate
+     */
+    this.car.recreate = () => {
+      this.car.destroy();
+      this.car.create();
+      this.car.chassis.body.wakeUp();
+    }
+
+    /**
+     * Brake
+     */
+    this.car.brake = (brakeStrength) => {
+      this.car.vehicle.setBreak(brakeStrength, 0);
+      this.car.vehicle.setBreak(brakeStrength, 1);
+      this.car.vehicle.setBreak(brakeStrength, 2);
+      this.car.vehicle.setBreak(brakeStrength, 3);
+    }
+
+    /**
+     * Unbrake
+     */
+    this.car.unbrake = () => {
+      this.car.vehicle.setBreak(0, 0);
+      this.car.vehicle.setBreak(0, 1);
+      this.car.vehicle.setBreak(0, 2);
+      this.car.vehicle.setBreak(0, 3);
+    }
+
+    /**
+     * Actions
+     */
+    this.controls.on('action', (_name) => {
+      switch(_name) {
+        case 'reset':
+          this.car.recreate();
+          break;
+      }
+    });
+
+    /**
+     * Cannon tick (clock)
+     */
+    this.world.addEventListener('postStep', () => {
+      // update speed
+      let positionDelta = new CANNON.Vec3();
+      positionDelta.copy(this.car.chassis.body.position);
+      postionDelta = positionDelta.vsub(this.car.oldPosition);
+
+      this.car.oldPosition.copy(this.car.chassis.body.position);
+      this.car.speed = positionDelta.length();
+
+      // going Forward
+      const localForward = new CANNON.Vec3(1,0,0);
+      this.car.chassis.body.vectorToWorldFrame(localForward, this.car.worldForward);
+      this.car.angle = Math.atan2(this.car.worldForward.y, this.car.worldForward.x);
+
+      this.car.forwardSpeed = this.car.worldForward.dot(positionDelta);
+      this.car.goingForward = this.car.forwardSpeed > 0;
+
+      // upside down
+      const localUp = new CANNON.Vec3(0, 0, 1);
+      const worldUp = new CANNON.Vec3();
+      this.car.chassis.body.vectorToWorldFrame(localUp, worldUp);
+
+      if (worldUp.dot(localUp) < 0.5) {
+        if (this.car.upsideDown.state === 'watching') {
+          this.car.upsideDown.state = 'pending';
+          this.car.upsideDown.pendingTimeout = window.setTimeout(() => {
+            this.car.upsideDown.state = 'turning';
+            this.car.jump(true);
+
+            this.car.upsideDown.turningTimeout = window.setTimeout(() => {
+              this.car.upsideDown.state = 'watching';
+            }, 1000);
+          }, 1000);
+        }
+      } else {
+        if (this.car.upsideDown.state === 'pending') {
+          this.car.upsideDown.state = 'watching'
+          window.clearTimeout(this.car.upsideDown.pendingTimeout);
+        }
+      }
+
+      // update wheel bodies
+      for (let i = 0; i < this.car.vehicle.wheelInfos.length; i++) {
+        this.car.vehicle.updateWheelTransform(i);
+
+        // fetch wheel transform
+        const transform = this.car.vehicle.wheelInfos[i].worldTransform;
+        this.car.wheels.bodies[i].position.copy(transform.position);
+        this.car.wheels.bodies[i].quaternion.copy(transform.quaternion);
+
+        // rotate wheels on the right TODO:
+      }
+
+      // slow back down
+      if (!this.controls.actions.up && !this.controls.actions.down) {
+        let slowDownForce = this.car.worldForward.clone();
+
+        if (this.car.goingForward) {
+          slowDownForce = slowDownForce.negate();
+        }
+
+        slowDownForce.scale(this.car.chassis.body.velocity.length() * 0.1, slowDownForce);
+
+        this.car.chassis.body.applyImpulse(slowDownForce, this.car.chassis.body.position);
+      }
+    });
+
+    /**
+     * Time tick (clock)
+     */
+    this.time.on('update', () => {
+      
+      /**
+       * Copy CANNON body position/quaternions into THREE model
+       */
+      // update chassis model
+      this.car.model.chassis.position.copy(this.car.chassis.body.position).add(this.car.options.chassisOffset);
+      this.car.model.chassis.quaternion.copy(this.car.chassis.body.quaternion);
+
+      // update wheel models
+      for (const _wheelKey in this.car.wheels.bodies) {
+        const wheelBody = this.car.wheels.bodies[_wheelKey];
+        const wheelMesh = this.car.model.wheels[_wheelKey];
+
+        wheelMesh.position.copy(wheelBody.position);
+        wheelMesh.quaternion.copy(wheelBody.quaternion);
+      }
+      
+      /**
+       * Steering
+       */
+      const steerStrength = this.time.delta * this.car.options.controlsSteeringSpeed;
+
+      // steer right
+      if (this.controls.actions.right) {
+        this.car.steering += steerStrength;
+      }
+      // steer left
+      else if (this.controls.actions.left) {
+        this.car.steering -= steerStrength;
+      }
+      // steer center
+      else {
+        if (Math.abs(this.car.steering) > steerStrength) {
+          this.car.steering -= steerStrength * Math.sign(this.car.steering);
+        } else {
+          this.car.steering = 0;
+        }
+      }
+
+      // clamp steer
+      if (Math.abs(this.car.steering) > this.car.options.controlsSteeringMax) {
+        this.car.steering = Math.sign(this.car.steering) * this.car.options.controlsSteeringMax
+      }
+
+      // update wheel turning
+      this.car.vehicle.setSteeringValue(-this.car.steering, this.car.wheels.indexes.frontLeft);
+      this.car.vehicle.setSteeringValue(-this.car.steering, this.car.wheels.indexes.frontRight);
+
+      /**
+       * Accelerate
+       */
+      const accelerationSpeed = this.controls.actions.boost ? this.car.options.controlsAcceleratingSpeedBoost : this.car.options.controlsAcceleratingSpeed;
+      const accelerateStrength = this.time.delta * accelerationSpeed;
+      const controlsAcceleratingMaxSpeed = this.controls.actions.boost ? this.car.options.controlsAcceleratingMaxSpeedBoost : this.car.options.controlsAcceleratingMaxSpeed
+      
+      // accelerate up
+      if (this.controls.action.up) {
+        if (this.car.speed < controlsAcceleratingMaxSpeed || !this.car.goingForward) {
+          this.car.accelerating = accelerateStrength;
+        } else {
+          this.car.accelerating = 0;
+        }
+      } else if (this.controls.actions.down) { // accelerate down
+        if (this.car.speed < contrlsAcceleratinMaxSpeed || !this.car.goingForward) {
+          this.car.accelerating = accelerateStrength;
+        } else {
+          this.car.accelerating = 0;
+        }
+      } else {
+        this.car.accelerating = 0;
+      }
+
+      this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.backLeft)
+      this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.backRight)
+
+      if(this.car.options.controlsSteeringQuad) {
+        this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.frontLeft)
+        this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.fontRight)
+      }
+      
+      if (this.contrls.actions.brake) {
+        this.car.brake(this.car.options.controlsBrakeStrength)
+      } else {
+        this.car.unbrake();
+      }
+    });
+
+    // create initial car
+    this.car.create();
+
+    // debug TODO:
+  }
+
+  /**
+   * 
+   * @param {*} _options 
+   */
+  addObjectFromThree(_options) {
+    // set up
+    const collision = {};
+
+    collision.model = {};
+    collision.model.meshes = [];
+    collision.model.container = new THREE.Object3D();
+    this.models.container.add(collision.model.container);
+
+    collision.children = [];
+
+    // material
+    const bodyMaterial = this.materials.items.dummy;
+
+    // body
+    collision.body = new CANNON.Body({
+      position: new CANNON.Vec3(_options.offset.x, _options.offset.y, _options.offset.z),
+      mass: _options.mass,
+      material: bodyMaterial
+    });
+    collision.body.allowSleep = true;
+    collision.body.sleepSpeedLimit = 0.01;
+    if (_options.sleep) {
+      collision.body.sleep();
+    }
+
+    this.world.addBody(collision.body);
+
+    // rotation (WHAT IS GOING ON HERE?)
+    if (_options.rotation) {
+      const rotationQuaternion = new CANNON.Quaternion();
+      rotationQuaternion.setFromEuler(_options.rotation.x, _options.rotation.y, _options.rotation.z, _options.rotation.order);
+      collision.body.quaternion = collision.body.quaternion.mult(rotationQuaternion);
+    }
+
+    // center
+    collision.center = new CANNON.Vec3();
+
+    // shapes
+    const shapes = [];
+
+    // for each mesh
+    for (let i = 0; i < _options.meshes.length; i++) {
+      const mesh = _options.meshes[i];
+
+      // define shape
+      let shape = null;
+
+      // if (mesh.name.match())
     }
   }
 }

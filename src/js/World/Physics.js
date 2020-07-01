@@ -419,7 +419,12 @@ export default class Physics {
         this.car.wheels.bodies[i].position.copy(transform.position);
         this.car.wheels.bodies[i].quaternion.copy(transform.quaternion);
 
-        // rotate wheels on the right TODO:
+        // rotate wheels on the right
+        if(i === 1 || i === 3) {
+            const rotationQuaternion = new CANNON.Quaternion(0, 0, 0, 1);
+            rotationQuaternion.setFromAxisAngle(new CANNON.Vec3(0, 0, 1), Math.PI);
+            this.car.wheels.bodies[i].quaternion = this.car.wheels.bodies[i].quaternion.mult(rotationQuaternion);
+        }
       }
 
       // slow back down
@@ -534,8 +539,8 @@ export default class Physics {
   }
 
   /**
-   * 
-   * @param {*} _options 
+   * Adds the objs from threejs to cannonjs
+   * @param {*} _options includes {meshes, offset, rotation, mass, sleep}
    */
   addObjectFromThree(_options) {
     // set up
@@ -563,9 +568,9 @@ export default class Physics {
       collision.body.sleep();
     }
 
-    this.world.addBody(collision.body);
+    this.world.addBody(collision.body); 
 
-    // rotation (WHAT IS GOING ON HERE?)
+    // rotation (WHAT IS GOING ON HERE?) we still don't know
     if (_options.rotation) {
       const rotationQuaternion = new CANNON.Quaternion();
       rotationQuaternion.setFromEuler(_options.rotation.x, _options.rotation.y, _options.rotation.z, _options.rotation.order);
@@ -578,14 +583,135 @@ export default class Physics {
     // shapes
     const shapes = [];
 
-    // for each mesh
+    // for each mesh define the type to add in cannonJs down bellow
     for (let i = 0; i < _options.meshes.length; i++) {
       const mesh = _options.meshes[i];
 
       // define shape
       let shape = null;
 
-      // if (mesh.name.match())
+      // Regex that compares to the names on blender file and defines the shape that will be added in cannon
+      if (mesh.name.match(/^cube_?[0-9]{0-3}?|box[0-9]{0,3}?$/i)) {
+        shape = "box";
+      } else if(mesh.name.match(/^cylinder_?[0-9]{0,3}?$/i)) {
+          shape = 'cylinder';
+      } else if(mesh.name.match(/^sphere_?[0-9]{0,3}?$/i)) {
+          shape = 'sphere';
+      } else if(mesh.name.match(/^center_?[0-9]{0,3}?$/i)) {
+          shape = 'center';
+      }
+
+      let shapeGeometry = null;
+      switch (shape) {
+        case shape === 'center':
+          collision.center.set(mesh.position.x, mesh.position.y, mesh.position.z);
+          break
+        case shape === 'cylinder':
+          shapeGeometry = new CANNON.Cylinder(mesh.scale.x, mesh.scale.x, mesh.scale.z, 8);
+          break
+        case shape === 'box':
+          const halfExtents = new CANNON.Vec3(mesh.scale.x * 0.5, mesh.scale.y * 0.5, mesh.scale.z * 0.5);
+          shapeGeometry = new CANNON.Box(halfExtents);
+          break
+        case shape === 'sphere':
+          shapeGeometry = new CANNON.Sphere(mesh.scale.x);
+          break
+        default:
+          console.log('unamed shape') // TODO: better debug message
+      }
+
+      // other shape
+      if (shape && shape != 'center') {
+
+        // position
+        const shapePosition = new CANNON.Vec3(mesh.position.x, mesh.position.y, mesh.position.z);
+
+        // quaternion
+        const shapeQuaternion = new CANNON.Quaternion(mesh.quaternion.x, mesh.quaternion.y, mesh.quaternion.z, mesh.quaternion.w);
+        
+        // save
+        shapes.push({ shapeGeometry, shapePosition, shapeQuaternion });
+
+        // create model object (used for debuging)
+        let modelGeometry = null;
+        switch (shape) {
+          case 'cylinder':
+            modelGeometry = new THREE.CylinderBufferGeometry(1, 1, 1, 8, 1);
+            modelGeometry.rotateX(Math.PI * 0.5);
+            break;
+          case 'box': 
+            modelGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
+            break;
+          case 'sphere':
+            modelGeometry = new THREE.SphereBufferGeometry(1, 8, 8);
+            break;
+          default:
+            console.log('unamed shape') // TODO: better debug message
+        }
+        
+        const modelMesh = new THREE.Mesh(modelGeometry, this.models.materials[_options.mass === 0 ? 'static' : 'dynamic']);
+        modelMesh.position.copy(mesh.position);
+        modelMesh.scale.copy(mesh.scale);
+        modelMesh.quaternion.copy(mesh.quaternion);
+
+        // save
+        collision.model.meshes.push(modelMesh);
+      }
     }
+
+    // update meshes to match center (three)
+    for (const _mesh of collision.model.meshes) {
+      _mesh.position.x -= collision.center.x;
+      _mesh.position.y -= collision.center.y;
+      _mesh.position.z -= collision.center.z;
+
+      collision.model.container.add(_mesh);
+    }
+
+    // updates shapes to match center (cannon)
+    for (const _shape of shapes) {
+      _shape.position.x -= collision.center.x;
+      _shape.position.y -= collision.center.y;
+      _shape.position.z -= collision.center.z;
+
+      collision.body.addShape(_shape.shapeGeometry, _shape.shapePosition, _shape.shapeQuaternion);
+    }
+
+    // update body to match center
+    collision.body.position.x += collision.center.x;
+    collision.body.position.y += collision.center.y;
+    collision.body.position.z += collision.center.z;
+
+    // save origin
+    collision.origin = {};
+    collision.origin.position = collision.body.position.clone();
+    collision.origin.quaternion = collision.body.quaternion.clone();
+    collision.origin.sleep = _options.sleep;
+
+    // update three model to follow cannon object
+    this.time.on('update', () => {
+      collision.model.container.position.set(collision.body.position.x, collision.body.position.y, collision.body.position.z);
+      collision.model.container.quaternion.set(collision.body.quaternion.x, collision.body.quaternion.y, collision.body.quaternion.z, collision.body.quaternion.w);
+
+      if (this.models.container.visible && _options.mass > 0) {
+        for (const _mesh of collision.model.container.children) {
+          _mesh.material = collision.body.sleepState === 2 ? this.models.materials.dynamicSleeping : this.models.materials.dynamic;
+        }
+      }
+    });
+
+    /**
+     * Reset
+     */
+    collision.reset = () => {
+      collision.body.position.copy(collision.origin.position);
+      collision.body.quaternion.copy(collision.origin.quaternion);
+
+      if (collision.origin.sleep) {
+        collision.body.sleep();
+      }
+    }
+
+    return collision;
   }
 }

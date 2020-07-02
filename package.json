@@ -1,7 +1,7 @@
 {
-  "name": "threes-tut",
+  "name": "portfolio-base",
   "version": "1.0.0",
-  "description": "threes.js tutorial",
+  "description": "threes.js portfolio app",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack/webpack.dev.js --open",
@@ -10,12 +10,12 @@
   "author": "gdamotta",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.10.2",
-    "@babel/preset-env": "^7.10.2",
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
     "babel-loader": "^8.1.0",
     "cannon-es": "^0.11.0",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.0.2",
+    "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^3.6.0",
     "file-loader": "^6.0.0",
     "html-loader": "^1.1.0",
@@ -26,7 +26,7 @@
     "style-loader": "^1.2.1",
     "three": "^0.117.1",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
+    "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.2"
   }

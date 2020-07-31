@@ -60,12 +60,11 @@ export default class Controls extends EventEmitter {
     this.keyboard.events = {};
     
     this.keyboard.events.KeyDown = (_event) => {
-      switch (_event.key){
+      switch (_event.key) {
         case 'ArrowUp':
         case 'z':
         case 'w':
           // this.camera.pan.reset();
-          
           this.actions.up = true;
           break;
 
@@ -98,7 +97,7 @@ export default class Controls extends EventEmitter {
     }
 
     this.keyboard.events.KeyUp = (_event) => {
-      switch (_event.key){
+      switch (_event.key) {
         case 'ArrowUp':
         case 'z':
         case 'w':

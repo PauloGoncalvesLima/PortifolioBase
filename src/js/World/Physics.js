@@ -30,7 +30,7 @@ export default class Physics {
   }
 
   setWorld() {
-    this.world = new CANNON.world();
+    this.world = new CANNON.world(); // FIXME: bug here from cannon-es // possibly different syntax?
     this.world.gravity.set(0, 0, -5);
     
     // Doesn't use broadphase why ?????

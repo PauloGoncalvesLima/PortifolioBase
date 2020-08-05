@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import Physics from './Physics.js';
 import Controls from './Controls.js';
+import Car from './Car.js';
 // TODO: Import the stuff needed
 
 export default class {
@@ -33,7 +34,8 @@ export default class {
         this.setControls();
         // this.setFloor(); ?might not keep or change?
         // this.setAreas(); ?might keep single area initialization?
-        this.setStartingScreen();
+        // this.setStartingScreen();
+        this.start();
     }
 
     /**
@@ -102,6 +104,22 @@ export default class {
      * Initializes car to world.
      */
     setCar() {
-        // TODO: waiting on .js equivalent
+        this.car = new Car({
+            config: this.config,
+            debug: this.debugFolder,
+            time: this.time,
+            resources: this.resources,
+            objects: this.objects,
+            physics: this.physics,
+            shadows: this.shadows,
+            materials: this.materials,
+            controls: this.controls,
+            sounds: this.sounds,
+            renderer: this.renderer,
+            camera: this.camera
+        });
+
+        // add car object to world container
+        this.container.add(this.car.container);
     }
 }

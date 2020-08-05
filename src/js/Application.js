@@ -53,7 +53,7 @@ export default class Application {
         // set up renderer
         this.renderer = new THREE.WebGLRenderer ({
             canvas: this.$canvas,
-            alpha = true
+            alpha: true
         });
         this.renderer.setClearColor("black", 1);
         this.renderer.setPixelRatio(2); // improves anti-aliasing
@@ -98,8 +98,23 @@ export default class Application {
         });
     }
 
-    // TODO:
+    /**
+     * Initializes the world and adds
+     * it to the scene.
+     */
     setWorld() {
+        this.world = new World({
+            config: this.config,
+            debug: this.debug,
+            resources: this.resources,
+            time: this.time,
+            sizes: this.sizes,
+            camera: this.camera,
+            renderer: this.renderer,
+            passes: this.passes
+        });
 
+        // add world to scene
+        this.scene.add(this.world.container);
     }
 }

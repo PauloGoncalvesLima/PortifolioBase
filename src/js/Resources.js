@@ -3,7 +3,10 @@ import * as THREE from 'three';
 import EventEmitter from './utils/EventEmitter';
 import Loader from './utils/Loader';
 
-import carSource from '../assets/models/car.glb';
+// Car
+import carChassisSource from '../assets/models/car/chassis.glb';
+import carWheelSource from '../assets/models/car/wheel.glb';
+
 import piston_topSource from '../assets/img/piston_top.png';
 import piston_bottomSource from '../assets/img/piston_bottom.png';
 import piston_sideSource from '../assets/img/piston_side.png';
@@ -20,7 +23,8 @@ export default class Resources extends EventEmitter {
 
       this.loader.load([
         // Car
-        { name: 'car', source: carSource },
+        { name: 'carChassis', source: carChassisSource },
+        { name: 'carWheel', source: carWheelSource },
 
         // Piston
         { name: 'piston_top', source: piston_topSource },

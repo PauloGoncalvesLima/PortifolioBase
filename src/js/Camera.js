@@ -27,7 +27,7 @@ export default class Camera {
 
     this.setAngle();
     this.setInstance();
-    this.setZoom();
+    // this.setZoom();
     this.setOrbitControls();
   }
 

@@ -35,7 +35,10 @@ export default class {
         // this.setFloor(); ?might not keep or change?
         // this.setAreas(); ?might keep single area initialization?
         // this.setStartingScreen();
-        this.start();
+        this.resources.on('ready', () => {
+            console.log('scene is ready to load');
+            this.start();
+          });
     }
 
     /**
@@ -56,7 +59,7 @@ export default class {
         // this.setZones();
         this.setObjects();
         this.setCar();
-        this.areas.car = this.car; // ??
+        // this.areas.car = this.car; // ??
         // this.setTiles();
         // this.setWalls();
         // this.setSections();

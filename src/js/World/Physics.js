@@ -17,7 +17,7 @@ export default class Physics {
 
     // set functions
     this.setWorld();
-    this.setModel();
+    this.setModels();
     this.setMaterial();
     this.setFloor();
     this.setCar();
@@ -30,7 +30,7 @@ export default class Physics {
   }
 
   setWorld() {
-    this.world = new CANNON.world(); // FIXME: bug here from cannon-es // possibly different syntax?
+    this.world = new CANNON.World();
     this.world.gravity.set(0, 0, -5);
     
     // Doesn't use broadphase why ?????
@@ -69,10 +69,9 @@ export default class Physics {
     this.materials.items.wheel = new CANNON.Material('wheelMaterial');
 
     // material contacts
-    
+    this.materials.contacts = {};
     // Contact between floor -- dummy
-    this.materials.contact = {};
-    this.materials.floorDummy = new CANNON.ContactMaterial(
+    this.materials.contacts.floorDummy = new CANNON.ContactMaterial(
       this.materials.items.floor,
       this.materials.items.dummy,
       {
@@ -84,30 +83,28 @@ export default class Physics {
     this.world.addContactMaterial(this.materials.contacts.floorDummy);
     
     // Contact between dummy -- dummy
-    this.materials.contact = {};
-    this.materials.dummyDummy = new CANNON.ContactMaterial(
-      this.materials.items.floor,
+    this.materials.contacts.dummyDummy = new CANNON.ContactMaterial(
+      this.materials.items.dummy,
       this.materials.items.dummy,
       {
-        friction: 0.05, 
+        friction: 0.5, 
         restitution: 0.3,
         contactEquationStiffness: 1000
       }
     );
-    this.world.addContactMaterial(this.materials.contacts.floorDummy);
+    this.world.addContactMaterial(this.materials.contacts.dummyDummy);
 
     // Contact between floor -- wheel
-    this.materials.contact = {};
-    this.materials.floorWheel = new CANNON.ContactMaterial(
+    this.materials.contacts.floorWheel = new CANNON.ContactMaterial(
       this.materials.items.floor,
-      this.materials.items.dummy,
+      this.materials.items.wheel,
       {
-        friction: 0.05, 
-        restitution: 0.3,
+        friction: 0.3, 
+        restitution: 0,
         contactEquationStiffness: 1000
       }
     );
-    this.world.addContactMaterial(this.materials.contacts.floorDummy);
+    this.world.addContactMaterial(this.materials.contacts.floorWheel);
   }
 
   setFloor() {
@@ -177,8 +174,8 @@ export default class Physics {
     this.car.options.controlsBrakeStrength = 0.45
 
     // upside down
-    this.car.updsideDown = {};
-    this.car.updsideDown.state = 'watching'; // possible: watching | pending | turning
+    this.car.upsideDown = {};
+    this.car.upsideDown.state = 'watching'; // possible: watching | pending | turning
     this.car.upsideDown.pendingTimeout = null;
     this.car.upsideDown.turningTimeout = null;
 
@@ -339,20 +336,20 @@ export default class Physics {
      * Brake
      */
     this.car.brake = (brakeStrength) => {
-      this.car.vehicle.setBreak(brakeStrength, 0);
-      this.car.vehicle.setBreak(brakeStrength, 1);
-      this.car.vehicle.setBreak(brakeStrength, 2);
-      this.car.vehicle.setBreak(brakeStrength, 3);
+      this.car.vehicle.setBrake(brakeStrength, 0);
+      this.car.vehicle.setBrake(brakeStrength, 1);
+      this.car.vehicle.setBrake(brakeStrength, 2);
+      this.car.vehicle.setBrake(brakeStrength, 3);
     }
 
     /**
      * Unbrake
      */
     this.car.unbrake = () => {
-      this.car.vehicle.setBreak(0, 0);
-      this.car.vehicle.setBreak(0, 1);
-      this.car.vehicle.setBreak(0, 2);
-      this.car.vehicle.setBreak(0, 3);
+      this.car.vehicle.setBrake(0, 0);
+      this.car.vehicle.setBrake(0, 1);
+      this.car.vehicle.setBrake(0, 2);
+      this.car.vehicle.setBrake(0, 3);
     }
 
     /**
@@ -373,7 +370,7 @@ export default class Physics {
       // update speed
       let positionDelta = new CANNON.Vec3();
       positionDelta.copy(this.car.chassis.body.position);
-      postionDelta = positionDelta.vsub(this.car.oldPosition);
+      positionDelta = positionDelta.vsub(this.car.oldPosition);
 
       this.car.oldPosition.copy(this.car.chassis.body.position);
       this.car.speed = positionDelta.length();
@@ -501,7 +498,7 @@ export default class Physics {
       const controlsAcceleratingMaxSpeed = this.controls.actions.boost ? this.car.options.controlsAcceleratingMaxSpeedBoost : this.car.options.controlsAcceleratingMaxSpeed
       
       // accelerate up
-      if (this.controls.action.up) {
+      if (this.controls.actions.up) {
         if (this.car.speed < controlsAcceleratingMaxSpeed || !this.car.goingForward) {
           this.car.accelerating = accelerateStrength;
         } else {
@@ -525,7 +522,7 @@ export default class Physics {
         this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.fontRight)
       }
       
-      if (this.contrls.actions.brake) {
+      if (this.controls.actions.brake) {
         this.car.brake(this.car.options.controlsBrakeStrength)
       } else {
         this.car.unbrake();

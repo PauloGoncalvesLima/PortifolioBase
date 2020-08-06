@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as dat from 'dat.gui';
 
 // utils
 import Sizes from './utils/Sizes.js';
@@ -32,14 +33,19 @@ export default class Application {
         // this.setTitle();
     }
 
-    // TODO:
+    // TODO: rest of config setup
     setConfig() {
-
+        this.config = {};
+        this.config.debug = window.location.hash === '#debug';
     }
 
-    // TODO:
+    /**
+     * Creates the debug folder.
+     */
     setDebug() {
-
+        if (this.config.debug) {
+            this.debug = new dat.GUI({ width: 420 });
+        }
     }
 
     /**
@@ -66,6 +72,12 @@ export default class Application {
         // adjust aspect on resize event
         this.sizes.on('resize', () => {
             this.renderer.setSize(this.sizes.viewport.width, this.sizes.viewport.height);
+        });
+
+        // render scene TODO: must change if post process passes are added.
+        this.time.on('update', () => {
+            // console.log('rendering stuff');
+            this.renderer.render(this.scene, this.camera.instance);
         });
     }
 

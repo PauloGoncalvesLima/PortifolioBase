@@ -13,7 +13,9 @@ export default class Physics {
     this.sounds = _options.sounds
 
     // debug setup
-    // TODO: NO DEBUG YET
+    if (this.debug) {
+      this.debugFolder = this.debug.addFolder('physics');
+    }
 
     // set functions
     this.setWorld();
@@ -41,7 +43,9 @@ export default class Physics {
     this.world.defaultContactMaterial.restitution = 0.2;
 
     // debug setup
-    // TODO: NO DEBUG YET
+    if (this.debug) {
+      this.debugFolder.add(this.world.gravity, 'z').step(0.0001).min(-20).max(20).name('gravity');
+    }
   }
 
   setModels() {
@@ -55,7 +59,9 @@ export default class Physics {
     this.models.materials.dynamicSleeping = new THREE.MeshBasicMaterial({color: 'yellow', wireframe: true});
 
     // debug setup
-    // TODO: NO DEBUG YET
+    if (this.debug) {
+      this.debugFolder.add(this.models.container, 'visible').name('modelsVisible');
+    }
   }
 
   setMaterial() {
@@ -132,7 +138,7 @@ export default class Physics {
 
     this.car.options = {}
     // shape
-    this.car.options.chassisWidth = 1.02
+    this.car.options.chassisWidth = 1
     this.car.options.chassisHeight = 1.16
     this.car.options.chassisDepth = 2.03
     // vertical position
@@ -144,7 +150,7 @@ export default class Physics {
     // wheel position
     this.car.options.wheelFrontOffsetDepth = 0.635
     this.car.options.wheelBackOffsetDepth = - 0.475
-    this.car.options.wheelOffsetWidth = 0.39
+    this.car.options.wheelOffsetWidth = 1
     // wheel size
     this.car.options.wheelRadius = 0.25
     this.car.options.wheelHeight = 0.24
@@ -514,12 +520,12 @@ export default class Physics {
         this.car.accelerating = 0;
       }
 
-      this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.backLeft)
-      this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.backRight)
+      this.car.vehicle.applyEngineForce(-this.car.accelerating, this.car.wheels.indexes.backLeft);
+      this.car.vehicle.applyEngineForce(-this.car.accelerating, this.car.wheels.indexes.backRight);
 
       if(this.car.options.controlsSteeringQuad) {
-        this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.frontLeft)
-        this.car.vehicle.applyEngineForce (-this.car.accelerating, this.car.wheels.indexes.fontRight)
+        this.car.vehicle.applyEngineForce(-this.car.accelerating, this.car.wheels.indexes.frontLeft);
+        this.car.vehicle.applyEngineForce(-this.car.accelerating, this.car.wheels.indexes.frontRight);
       }
       
       if (this.controls.actions.brake) {
@@ -532,7 +538,41 @@ export default class Physics {
     // create initial car
     this.car.create();
 
-    // debug TODO:
+    // debug
+    if (this.debug) {
+      this.car.debugFolder = this.debugFolder.addFolder('car')
+      this.car.debugFolder.open();
+
+      this.car.debugFolder.add(this.car.options, 'chassisWidth').step(0.001).min(0).max(5).name('chassisWidth').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'chassisHeight').step(0.001).min(0).max(5).name('chassisHeight').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'chassisDepth').step(0.001).min(0).max(5).name('chassisDepth').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options.chassisOffset, 'z').step(0.001).min(0).max(5).name('chassisOffset').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'chassisMass').step(0.001).min(0).max(1000).name('chassisMass').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelFrontOffsetDepth').step(0.001).min(0).max(5).name('wheelFrontOffsetDepth').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelBackOffsetDepth').step(0.001).min(- 5).max(0).name('wheelBackOffsetDepth').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelOffsetWidth').step(0.001).min(0).max(5).name('wheelOffsetWidth').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelRadius').step(0.001).min(0).max(2).name('wheelRadius').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelHeight').step(0.001).min(0).max(2).name('wheelHeight').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelSuspensionStiffness').step(0.001).min(0).max(300).name('wheelSuspensionStiffness').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelSuspensionRestLength').step(0.001).min(0).max(5).name('wheelSuspensionRestLength').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelFrictionSlip').step(0.001).min(0).max(30).name('wheelFrictionSlip').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelDampingRelaxation').step(0.001).min(0).max(30).name('wheelDampingRelaxation').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelDampingCompression').step(0.001).min(0).max(30).name('wheelDampingCompression').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelMaxSuspensionForce').step(0.001).min(0).max(1000000).name('wheelMaxSuspensionForce').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelRollInfluence').step(0.001).min(0).max(1).name('wheelRollInfluence').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelMaxSuspensionTravel').step(0.001).min(0).max(5).name('wheelMaxSuspensionTravel').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelCustomSlidingRotationalSpeed').step(0.001).min(- 45).max(45).name('wheelCustomSlidingRotationalSpeed').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'wheelMass').step(0.001).min(0).max(1000).name('wheelMass').onFinishChange(this.car.recreate);
+      this.car.debugFolder.add(this.car.options, 'controlsSteeringSpeed').step(0.001).min(0).max(0.1).name('controlsSteeringSpeed');
+      this.car.debugFolder.add(this.car.options, 'controlsSteeringMax').step(0.001).min(0).max(Math.PI * 0.5).name('controlsSteeringMax');
+      this.car.debugFolder.add(this.car.options, 'controlsSteeringQuad').name('controlsSteeringQuad');
+      this.car.debugFolder.add(this.car.options, 'controlsAcceleratingSpeed').step(0.001).min(0).max(30).name('controlsAcceleratingSpeed');
+      this.car.debugFolder.add(this.car.options, 'controlsAcceleratingSpeedBoost').step(0.001).min(0).max(30).name('controlsAcceleratingSpeedBoost');
+      this.car.debugFolder.add(this.car.options, 'controlsAcceleratingQuad').name('controlsAcceleratingQuad');
+      this.car.debugFolder.add(this.car.options, 'controlsBrakeStrength').step(0.001).min(0).max(5).name('controlsBrakeStrength');
+      this.car.debugFolder.add(this.car, 'recreate');
+      this.car.debugFolder.add(this.car, 'jump');
+    }
   }
 
   /**

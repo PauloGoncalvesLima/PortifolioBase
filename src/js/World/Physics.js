@@ -144,7 +144,7 @@ export default class Physics {
     // vertical position
     this.car.options.chassisOffset = new CANNON.Vec3(0, 0, 0.14)
     // CANNON mass/weight
-    this.car.options.chassisMass = 20
+    this.car.options.chassisMass = 30
     
     // Wheel Settings
     // wheel position
@@ -512,7 +512,7 @@ export default class Physics {
         }
       } else if (this.controls.actions.down) { // accelerate down
         if (this.car.speed < controlsAcceleratingMaxSpeed || !this.car.goingForward) {
-          this.car.accelerating = accelerateStrength;
+          this.car.accelerating = -accelerateStrength;
         } else {
           this.car.accelerating = 0;
         }

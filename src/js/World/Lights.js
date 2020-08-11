@@ -67,13 +67,12 @@ export default class Lights {
         this.sun.options.color = '#FFFFFF';
         this.sun.options.strength = 15;
         this.sun.options.position = new Vector3(0, 7, 10);
-        this.sun.options.rotation = new Vector3(0, 90 * (Math.PI/180), 0);
+        // default target is (0, 0, 0)
 
         // create
         this.sun.create = () => {
             this.sun.object = new THREE.DirectionalLight(this.sun.options.color, this.sun.options.strength);
-            this.sun.object.position.set(0, 7, 10); // FIXME: change rotation and position with options above
-            this.sun.object.rotation.set(0, 90 * (Math.PI/180), 0);
+            this.sun.object.position.copy(this.sun.options.position);
             this.container.add(this.sun.object);
         }
         
@@ -99,13 +98,9 @@ export default class Lights {
             this.sun.debugFolder.addColor(this.sun.options, 'color').name('color').onFinishChange(this.sun.recreate);
             this.sun.debugFolder.add(this.sun.options, 'strength').step(0.001).min(0).max(30).name('strength').onFinishChange(this.sun.recreate);
 
-            this.sun.debugFolder.add(this.sun.options.position, 'x').name('posX').onFinishChange(this.sun.recreate);
-            this.sun.debugFolder.add(this.sun.options.position, 'y').name('posY').onFinishChange(this.sun.recreate);
-            this.sun.debugFolder.add(this.sun.options.position, 'z').name('posZ').onFinishChange(this.sun.recreate);
-
-            this.sun.debugFolder.add(this.sun.options.rotation, 'x').name('rotX').onFinishChange(this.sun.recreate);
-            this.sun.debugFolder.add(this.sun.options.rotation, 'y').name('rotY').onFinishChange(this.sun.recreate);
-            this.sun.debugFolder.add(this.sun.options.rotation, 'z').name('rotZ').onFinishChange(this.sun.recreate);
+            this.sun.debugFolder.add(this.sun.options.position, 'x').step(0.001).min(-30).max(30).name('posX').onFinishChange(this.sun.recreate);
+            this.sun.debugFolder.add(this.sun.options.position, 'y').step(0.001).min(-30).max(30).name('posY').onFinishChange(this.sun.recreate);
+            this.sun.debugFolder.add(this.sun.options.position, 'z').step(0.001).min(-30).max(30).name('posZ').onFinishChange(this.sun.recreate);
         }
     }
 }

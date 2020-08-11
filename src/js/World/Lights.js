@@ -72,8 +72,8 @@ export default class Lights {
         // create
         this.sun.create = () => {
             this.sun.object = new THREE.DirectionalLight(this.sun.options.color, this.sun.options.strength);
-            this.sun.object.position.set(this.sun.options.position);
-            this.sun.object.rotation.set(this.sun.options.rotation);
+            this.sun.object.position.set(0, 7, 10); // FIXME: change rotation and position with options above
+            this.sun.object.rotation.set(0, 90 * (Math.PI/180), 0);
             this.container.add(this.sun.object);
         }
         

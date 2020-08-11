@@ -35,7 +35,7 @@ const resources = new Resources();
 resources.on('ready', () => {
   console.log('scene is ready to load');
   // add car
-  scene.add(resources.items['car'].scene);
+  scene.add(resources.items['carChassis'].scene);
 });
 
 // lighting

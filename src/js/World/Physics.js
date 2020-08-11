@@ -138,25 +138,25 @@ export default class Physics {
 
     this.car.options = {}
     // shape
-    this.car.options.chassisWidth = 1
-    this.car.options.chassisHeight = 1.16
-    this.car.options.chassisDepth = 2.03
+    this.car.options.chassisWidth = 0.9
+    this.car.options.chassisHeight = 0.6
+    this.car.options.chassisDepth = 2.65
     // vertical position
-    this.car.options.chassisOffset = new CANNON.Vec3(0, 0, 0.41)
+    this.car.options.chassisOffset = new CANNON.Vec3(0, 0, 0.14)
     // CANNON mass/weight
     this.car.options.chassisMass = 20
     
     // Wheel Settings
     // wheel position
-    this.car.options.wheelFrontOffsetDepth = 0.635
-    this.car.options.wheelBackOffsetDepth = - 0.475
-    this.car.options.wheelOffsetWidth = 1
+    this.car.options.wheelFrontOffsetDepth = 0.925
+    this.car.options.wheelBackOffsetDepth = - 0.9
+    this.car.options.wheelOffsetWidth = 0.645
     // wheel size
-    this.car.options.wheelRadius = 0.25
-    this.car.options.wheelHeight = 0.24
+    this.car.options.wheelRadius = 0.19
+    this.car.options.wheelHeight = 0.15
     // suspension spring settings
-    this.car.options.wheelSuspensionStiffness = 25
-    this.car.options.wheelSuspensionRestLength = 0.1
+    this.car.options.wheelSuspensionStiffness = 10
+    this.car.options.wheelSuspensionRestLength = 0.3
     // wheel friction with floor
     this.car.options.wheelFrictionSlip = 5
     // wheel damping settings
@@ -294,7 +294,7 @@ export default class Physics {
       this.car.model.container = new THREE.Object3D();
       this.models.container.add(this.car.model.container);
 
-      this.car.model.material = new THREE.MeshBasicMaterial({ color: 'white', wireframe: true });
+      this.car.model.material = new THREE.MeshBasicMaterial({ color: 'orange', wireframe: true });
       this.car.model.chassis = new THREE.Mesh(
         new THREE.BoxBufferGeometry (
           this.car.options.chassisDepth, 

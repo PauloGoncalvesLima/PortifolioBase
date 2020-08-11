@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import Physics from './Physics.js';
 import Controls from './Controls.js';
 import Car from './Car.js';
+import Lights from './Lights.js';
 // TODO: Import the stuff needed
 
 export default class {
@@ -56,6 +57,7 @@ export default class {
         // this.setMaterials();
         // this.setShadows();
         this.setPhysics();
+        this.setLights();
         // this.setZones();
         this.setObjects();
         this.setCar();
@@ -94,6 +96,18 @@ export default class {
 
         // add physics models (wireframe) to world container
         this.container.add(this.physics.models.container);
+    }
+
+    /**
+     * Initializes the world lights.
+     */
+    setLights() {
+        this.lights = new Lights({
+            debug: this.debug
+        });
+
+        // add lights to world container
+        this.container.add(this.lights.container);
     }
 
     /**

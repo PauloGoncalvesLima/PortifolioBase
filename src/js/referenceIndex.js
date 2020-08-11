@@ -49,7 +49,7 @@ var targetObject = new THREE.Object3D();
 scene.add(targetObject);
 
 var directionalLight = new THREE.DirectionalLight("white", 15);
-directionalLight.position.set(0,7,10);7
+directionalLight.position.set(0,7,10);
 
 directionalLight.rotation.set(0, 90 * (Math.PI/180), 0);
 targetObject.position.set(0,5, -3);

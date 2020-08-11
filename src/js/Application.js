@@ -64,7 +64,7 @@ export default class Application {
         this.renderer.setClearColor("black", 1);
         this.renderer.setPixelRatio(2); // improves anti-aliasing
         this.renderer.setSize(this.sizes.viewport.width, this.sizes.viewport.height);
-        // this.renderer.physicallyCorrectLights = true;
+        this.renderer.physicallyCorrectLights = true;
         this.renderer.gammaFactor = 2.2;
         this.renderer.gammaOutPut = true;
         this.renderer.autoClear = false;

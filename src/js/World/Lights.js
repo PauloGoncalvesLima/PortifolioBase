@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { Vector3 } from 'three';
 
 export default class Lights {
     /**
@@ -66,7 +65,7 @@ export default class Lights {
         this.sun.options = {};
         this.sun.options.color = '#FFFFFF';
         this.sun.options.strength = 15;
-        this.sun.options.position = new Vector3(0, 7, 10);
+        this.sun.options.position = new THREE.Vector3(0, 7, 10);
         // default target is (0, 0, 0)
 
         // create

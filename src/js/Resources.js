@@ -7,6 +7,9 @@ import Loader from './utils/Loader';
 import carChassisSource from '../assets/models/car/chassis.glb';
 import carWheelSource from '../assets/models/car/wheel.glb';
 
+// Environment
+import envRoadSource from '../assets/models/env/road.glb';
+
 import piston_topSource from '../assets/img/piston_top.png';
 import piston_bottomSource from '../assets/img/piston_bottom.png';
 import piston_sideSource from '../assets/img/piston_side.png';
@@ -25,6 +28,9 @@ export default class Resources extends EventEmitter {
         // Car
         { name: 'carChassis', source: carChassisSource },
         { name: 'carWheel', source: carWheelSource },
+
+        // Environment
+        { name: 'envRoad', source: envRoadSource},
 
         // Piston
         { name: 'piston_top', source: piston_topSource },

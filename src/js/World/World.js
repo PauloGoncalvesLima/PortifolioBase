@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import Physics from './Physics.js';
 import Controls from './Controls.js';
+import Env from './Env.js';
 import Car from './Car.js';
 import Lights from './Lights.js';
 // TODO: Import the stuff needed
@@ -60,6 +61,7 @@ export default class {
         this.setLights();
         // this.setZones();
         this.setObjects();
+        this.setEnv();
         this.setCar();
         // this.areas.car = this.car; // ??
         // this.setTiles();
@@ -115,6 +117,20 @@ export default class {
      */
     setObjects() {
         // TODO: waiting on .js equivalent
+    }
+
+    /**
+     * Initializes the playable environment.
+     */
+    setEnv() {
+        this.env = new Env({
+            resources: this.resources,
+            config: this.config,
+            debug: this.debug
+        });
+
+        // add environment to world container
+        this.container.add(this.env.container);
     }
 
      /**

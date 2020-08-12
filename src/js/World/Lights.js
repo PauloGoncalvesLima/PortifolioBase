@@ -25,7 +25,7 @@ export default class Lights {
 
         // options
         this.ambient.options = {}
-        this.ambient.options.color = '#FFFFFF';
+        this.ambient.options.color = '#FEFF7D';
         this.ambient.options.strength = 1;
         
         // create
@@ -63,8 +63,8 @@ export default class Lights {
 
         // options
         this.sun.options = {};
-        this.sun.options.color = '#FFFFFF';
-        this.sun.options.strength = 15;
+        this.sun.options.color = '#DCFFF1';
+        this.sun.options.strength = 6;
         this.sun.options.position = new THREE.Vector3(0, 7, 10);
         // default target is (0, 0, 0)
 

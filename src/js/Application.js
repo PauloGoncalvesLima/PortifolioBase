@@ -55,13 +55,15 @@ export default class Application {
     setRenderer() {
         // set up scene
         this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color( "#5DAAFA" );
+
 
         // set up renderer
         this.renderer = new THREE.WebGLRenderer ({
             canvas: this.$canvas,
             alpha: true
         });
-        this.renderer.setClearColor("black", 1);
+        this.renderer.setClearColor("white", 1);
         this.renderer.setPixelRatio(2); // improves anti-aliasing
         this.renderer.setSize(this.sizes.viewport.width, this.sizes.viewport.height);
         this.renderer.physicallyCorrectLights = true;

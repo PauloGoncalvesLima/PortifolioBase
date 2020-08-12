@@ -65,7 +65,7 @@ export default class Lights {
         this.sun.options = {};
         this.sun.options.color = '#DCFFF1';
         this.sun.options.strength = 6;
-        this.sun.options.position = new THREE.Vector3(0, 7, 10);
+        this.sun.options.position = new THREE.Vector3(25, 7, 10);
         // default target is (0, 0, 0)
 
         // create

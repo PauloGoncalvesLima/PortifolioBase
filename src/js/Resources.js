@@ -3,6 +3,9 @@ import * as THREE from 'three';
 import EventEmitter from './utils/EventEmitter';
 import Loader from './utils/Loader';
 
+// Matcaps
+import matcapOrangeMetalSource from '../assets/matcaps/orangeMetal.png';
+
 // Car
 import carChassisSource from '../assets/models/car/chassis.glb';
 import carWheelSource from '../assets/models/car/wheel.glb';
@@ -25,6 +28,9 @@ export default class Resources extends EventEmitter {
       this.items = {};
 
       this.loader.load([
+        // Matcaps
+        { name: 'matcapOrangeMetal', source: matcapOrangeMetalSource, type: 'texture' },
+
         // Car
         { name: 'carChassis', source: carChassisSource },
         { name: 'carWheel', source: carWheelSource },

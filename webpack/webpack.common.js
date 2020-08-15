@@ -12,6 +12,7 @@ module.exports = {
     ],
     module: {
         rules: [
+            // JavaScript
             {
                 test: /\.js?$/,
                 exclude: /node_modules/,
@@ -20,10 +21,14 @@ module.exports = {
                     presets: ['@babel/preset-env']
                 }
             },
+            
+            // HTML
             {
                 test: /\.html$/,
                 use: ["html-loader"]
             },
+
+            // Images
             {
                 test: /\.(svg|png|jpg|gif)$/,
                 use: {
@@ -34,6 +39,7 @@ module.exports = {
                     }
                 }
             },
+
             // Models
             {
                 test: /\.(glb|gltf|fbx|obj)$/,
@@ -48,6 +54,16 @@ module.exports = {
                     }
                 ]
             },
+
+            // Shaders
+            {
+                test: /\.(glsl|vs|fs|vert|frag)$/,
+                exclude: /node_modules/,
+                use: [
+                    'raw-loader',
+                    'glslify-loader'
+                ]
+            }
         ]
     }
 }

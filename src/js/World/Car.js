@@ -9,7 +9,7 @@ export default class Car {
         // options
         this.time = _options.time;
         this.resources = _options.resources;
-        // this.objects = _options.objects
+        this.objects = _options.objects;
         this.physics = _options.physics;
         // this.shadows = _options.shadows
         // this.materials = _options.materials
@@ -79,7 +79,8 @@ export default class Car {
     setChassis() {
         this.chassis = {};
         this.chassis.offset = new THREE.Vector3(0, 0, - 0.28);
-        this.chassis.object = this.models.chassis.scene;
+        console.log(this.models.chassis.scene.children);
+        this.chassis.object = this.objects.getConvertedMesh(this.models.chassis.scene.children);
         this.chassis.object.position.copy(this.physics.car.chassis.body.position);
         this.chassis.oldPosition = this.chassis.object.position.clone();
         this.container.add(this.chassis.object);
@@ -106,7 +107,7 @@ export default class Car {
      */
     setWheels() {
         this.wheels = {};
-        this.wheels.object = this.models.wheel.scene;
+        this.wheels.object = this.objects.getConvertedMesh(this.models.wheel.scene.children);
         this.wheels.items = [];
 
         // create each of the 4 wheels

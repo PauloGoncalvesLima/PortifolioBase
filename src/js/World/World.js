@@ -1,5 +1,7 @@
 import * as THREE from 'three';
+import Materials from './Materials.js';
 import Physics from './Physics.js';
+import Objects from './Objects.js';
 import Controls from './Controls.js';
 import Env from './Env.js';
 import Car from './Car.js';
@@ -55,7 +57,7 @@ export default class {
 
         // TODO: figure out all of these functions, scrap uneeded
         // this.setReveal();
-        // this.setMaterials();
+        this.setMaterials();
         // this.setShadows();
         this.setPhysics();
         this.setLights();
@@ -80,6 +82,16 @@ export default class {
             time: this.time,
             camera: this.camera,
             sounds: this.sounds
+        });
+    }
+
+    /**
+     * Initializes the shading materials.
+     */
+    setMaterials() {
+        this.materials = new Materials({
+            resources: this.resources,
+            debug: this.debugFolder
         });
     }
 
@@ -116,7 +128,18 @@ export default class {
      * Initializes objects to world.
      */
     setObjects() {
-        // TODO: waiting on .js equivalent
+        this.objects = new Objects({
+            time: this.time,
+            resources: this.resources,
+            materials: this.materials,
+            physics: this.physics,
+            shadows: this.shadows,
+            sounds: this.sounds,
+            debug: this.debugFolder
+        });
+
+        // add objects to world container
+        this.container.add(this.objects.container);
     }
 
     /**

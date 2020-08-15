@@ -4,7 +4,13 @@ import EventEmitter from './utils/EventEmitter';
 import Loader from './utils/Loader';
 
 // Matcaps
+import matcapBlackSource from '../assets/matcaps/black.png';
+import matcapWhiteSource from '../assets/matcaps/white.png';
+import matcapGreyMetalSource from '../assets/matcaps/greyMetal.png';
 import matcapOrangeMetalSource from '../assets/matcaps/orangeMetal.png';
+import matcapRedMetalSource from '../assets/matcaps/redMetal.png';
+import matcapRedGlowSource from '../assets/matcaps/redGlow.png';
+import matcapYellowGlowSource from '../assets/matcaps/yellowGlow.png';
 
 // Car
 import carChassisSource from '../assets/models/car/chassis.glb';
@@ -29,7 +35,13 @@ export default class Resources extends EventEmitter {
 
       this.loader.load([
         // Matcaps
+        { name: 'matcapBlack', source: matcapBlackSource, type: 'texture' },
+        { name: 'matcapWhite', source: matcapWhiteSource, type: 'texture' },
+        { name: 'matcapGreyMetal', source: matcapGreyMetalSource, type: 'texture' },
         { name: 'matcapOrangeMetal', source: matcapOrangeMetalSource, type: 'texture' },
+        { name: 'matcapRedMetal', source: matcapRedMetalSource, type: 'texture' },
+        { name: 'matcapRedGlow', source: matcapRedGlowSource, type: 'texture' },
+        { name: 'matcapYellowGlow', source: matcapYellowGlowSource, type: 'texture' },
 
         // Car
         { name: 'carChassis', source: carChassisSource },

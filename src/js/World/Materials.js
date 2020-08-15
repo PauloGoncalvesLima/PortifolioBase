@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { MeshMatcapMaterial } from 'three';
 // import FloorShadowMaterial from '../Materials/FloorShadow.js' // TODO: ? maybe implement shadows ?
-import MatcapMaterial from '../Materials/Matcap.js' // TODO: implement matcap material
+import MatcapMaterial from '../Materials/Matcap.js'
 
 export default class Materials {
     /**
@@ -62,11 +61,47 @@ export default class Materials {
             uIndirectColor: null
         }
 
+        // black
+        this.shades.items.black = new MatcapMaterial();
+        this.shades.items.black.name = 'shadeBlack';
+        this.shades.items.black.uniforms.matcap.value = this.resources.items.matcapBlackTexture;
+        this.items.black = this.shades.items.black;
+
+        // white
+        this.shades.items.white = new MatcapMaterial();
+        this.shades.items.white.name = 'shadeWhite';
+        this.shades.items.white.uniforms.matcap.value = this.resources.items.matcapWhiteTexture;
+        this.items.white = this.shades.items.white;
+
+        // greyMetal
+        this.shades.items.greyMetal = new MatcapMaterial();
+        this.shades.items.greyMetal.name = 'shadeGreyMetal';
+        this.shades.items.greyMetal.uniforms.matcap.value = this.resources.items.matcapGreyMetalTexture;
+        this.items.greyMetal = this.shades.items.greyMetal;
+
         // orangeMetal
         this.shades.items.orangeMetal = new MatcapMaterial();
         this.shades.items.orangeMetal.name = 'shadeOrangeMetal';
         this.shades.items.orangeMetal.uniforms.matcap.value = this.resources.items.matcapOrangeMetalTexture;
         this.items.orangeMetal = this.shades.items.orangeMetal;
+
+        // redMetal
+        this.shades.items.redMetal = new MatcapMaterial();
+        this.shades.items.redMetal.name = 'shadeRedMetal';
+        this.shades.items.redMetal.uniforms.matcap.value = this.resources.items.matcapRedMetalTexture;
+        this.items.redMetal = this.shades.items.redMetal;
+
+        // redGlow
+        this.shades.items.redGlow = new MatcapMaterial();
+        this.shades.items.redGlow.name = 'shadeRedGlow';
+        this.shades.items.redGlow.uniforms.matcap.value = this.resources.items.matcapRedGlowTexture;
+        this.items.redGlow = this.shades.items.redGlow;
+
+        // yellowGlow
+        this.shades.items.yellowGlow = new MatcapMaterial();
+        this.shades.items.yellowGlow.name = 'shadeYellowGlow';
+        this.shades.items.yellowGlow.uniforms.matcap.value = this.resources.items.matcapYellowGlowTexture;
+        this.items.yellowGlow = this.shades.items.yellowGlow;
 
         // update uniforms for materials (used for debugging and first set)
         this.shades.updateMaterials = () => {

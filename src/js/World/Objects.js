@@ -104,10 +104,10 @@ export default class Objects {
     }
 
     getConvertedMesh(_children, _options = {}) {
-        const container = new THREE.Object3D();
+        const container = new THREE.Group();
         const center = new THREE.Vector3();
 
-        this.preparse = (_child) => {
+        this.preparse = (_child, _parent) => {
             // define center
             if (_child.name.match(/^center_?[0-9]{0,3}?/i)) {
                 center.copy(_child.position);
@@ -116,7 +116,6 @@ export default class Objects {
             // parse mesh
             if (_child instanceof THREE.Mesh) {
                 // find parser and use default if not found
-                console.log(_child.material.name);
                 let parser = this.parsers.items.find((_item) => _child.material.name.match(_item.regex));
                 if (typeof parser === 'undefined') {
                     parser = this.parsers.default;
@@ -126,21 +125,24 @@ export default class Objects {
                 const mesh = parser.apply(_child, _options);
 
                 // add mesh to container
-                container.add(mesh);
+                _parent.add(mesh);
             }
 
             // parse group recursively
             if (_child instanceof THREE.Group) {
-                for (const _groupChild of _child.children) {
-                    this.preparse(_groupChild);
+                const newGroup = _child.clone(false);
+                const baseGroupChildren = [..._child.children]; // prevents object skipping
+                for (const _groupChild of baseGroupChildren) {
+                    this.preparse(_groupChild, newGroup);
                 }
+                _parent.add(newGroup);
             }
         }
 
         // step through each child
-        const baseChildren = [..._children];
+        const baseChildren = [..._children]; // prevents object skipping
         for (const _child of baseChildren) {
-            this.preparse(_child);
+            this.preparse(_child, container);
         }
 
         // recenter object

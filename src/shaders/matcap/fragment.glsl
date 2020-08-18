@@ -42,7 +42,7 @@ void main() {
 
     if(vWorldPosition.z < 0.0)
     {
-        discard;
+        // discard;
     }
 
     #include <clipping_planes_fragment>

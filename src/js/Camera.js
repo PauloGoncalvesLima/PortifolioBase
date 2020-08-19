@@ -35,7 +35,7 @@ export default class Camera {
     // set up
     this.angle = {};
     this.angle.value = new THREE.Vector3();
-    this.angle.height = 0.5;
+    this.angle.height = 2;
     this.angle.lerpAlpha = 0.125;
 
     // debug
@@ -54,7 +54,7 @@ export default class Camera {
 
   setInstance() {
     // set up
-    this.instance = new THREE.PerspectiveCamera(70, this.sizes.viewport.width / this.sizes.viewport.height, 1, 80);
+    this.instance = new THREE.PerspectiveCamera(70, this.sizes.viewport.width / this.sizes.viewport.height, 1, 200);
     this.instance.up.set(0, 0, 1);
     this.instance.position.copy(this.angle.value);
     this.instance.distance = 8;

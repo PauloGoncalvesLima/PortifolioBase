@@ -35,7 +35,7 @@ export default class Camera {
     // set up
     this.angle = {};
     this.angle.value = new THREE.Vector3();
-    this.angle.height = 2;
+    this.angle.height = 0.3;
     this.angle.lerpAlpha = 0.125;
 
     // debug

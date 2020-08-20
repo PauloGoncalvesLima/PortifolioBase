@@ -56,7 +56,7 @@ export default class {
         // }, 2000);
 
         // TODO: figure out all of these functions, scrap uneeded
-        // this.setReveal();
+        this.setReveal();
         this.setMaterials();
         // this.setShadows();
         this.setPhysics();
@@ -70,6 +70,54 @@ export default class {
         // this.setWalls();
         // this.setSections();
         // this.setEasterEggs();
+    }
+
+    setReveal() {
+        this.reveal = {};
+        this.reveal.matcapsProgress = 0;
+        // this.reveal.floorShadowsProgress = 0;
+        this.reveal.previousMatcapsProgress = null;
+        // this.reveal.previousFloorShadowsProgress = null;
+
+        // method to initiate reveal process
+        this.reveal.go = () => {
+            // matcap reveal
+            let step = this.reveal.matcapsProgress + (1 - this.reveal.matcapsProgress) / 2;
+            this.reveal.matcapsProgress = step > 1 ? 1 : step;
+            // TODO: shadows
+
+            // car setup
+            this.physics.car.chassis.body.sleep();
+            this.physics.car.chassis.body.position.set(0,0,12);
+            window.setTimeout(() => {
+                this.physics.car.chassis.body.wakeUp();
+            }, 300);
+
+            // sound TODO:
+            // touch controls TODO:
+        }
+
+        // update function
+        this.time.on('update', () => {
+            // matcap progress changed
+            if(this.reveal.matcapsProgress !== this.reveal.previousMatcapsProgress) {
+                // update each material
+                for(const _materialKey in this.materials.shades.items) {
+                    const material = this.materials.shades.items[_materialKey];
+                    material.uniforms.uRevealProgress.value = this.reveal.matcapsProgress;
+                }
+                // save previous
+                this.reveal.previousMatcapsProgress = this.reveal.matcapsProgress;
+            }
+            // TODO: shadows
+        });
+
+        // debug
+        if (this.debug) {
+            this.debugFolder.add(this.reveal, 'matcapsProgress').step(0.0001).min(0).max(1).name('matcapsProgress');
+            // this.debugFolder.add(this.reveal, 'floorShadowProgress').step(0.0001).min(0).max(1).name('floorShadowProgress');
+            this.debugFolder.add(this.reveal, 'go').name('reveal');
+        }
     }
 
     /**

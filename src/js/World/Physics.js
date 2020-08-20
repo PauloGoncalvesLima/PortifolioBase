@@ -169,10 +169,10 @@ export default class Physics {
     this.car.options.wheelMass = 5
     
     // Controls Settings
-    this.car.options.controlsSteeringSpeed = 0.005
+    this.car.options.controlsSteeringSpeed = 0.002
     this.car.options.controlsSteeringMax = Math.PI * 0.17
     this.car.options.controlsSteeringQuad = false
-    this.car.options.controlsAcceleratingMaxSpeed = 0.055
+    this.car.options.controlsAcceleratingMaxSpeed = 0.1
     this.car.options.controlsAcceleratingMaxSpeedBoost = 0.11
     this.car.options.controlsAcceleratingSpeed = 2
     this.car.options.controlsAcceleratingSpeedBoost = 3.5

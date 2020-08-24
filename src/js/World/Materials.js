@@ -229,6 +229,12 @@ export default class Materials {
         this.shades.items.redGlow.uniforms.matcap.value = this.resources.items.matcapRedGlowTexture;
         this.items.redGlow = this.shades.items.redGlow;
 
+        // purple
+        this.shades.items.purple = new MatcapMaterial();
+        this.shades.items.purple.name = 'shadePurple';
+        this.shades.items.purple.uniforms.matcap.value = this.resources.items.matcapPurpleTexture;
+        this.items.purple = this.shades.items.purple;
+
         // yellowLight
         this.shades.items.yellowLight = new MatcapMaterial();
         this.shades.items.yellowLight.name = 'shadeYellowLight';

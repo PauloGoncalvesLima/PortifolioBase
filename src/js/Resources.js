@@ -32,6 +32,7 @@ import matcapRedClothSource from '../assets/matcaps/redCloth.png';
 import matcapRedMatteSource from '../assets/matcaps/redMatte.png';
 import matcapRedMetalSource from '../assets/matcaps/redMetal.png';
 import matcapRedGlowSource from '../assets/matcaps/redGlow.png';
+import matcapPurpleSource from '../assets/matcaps/purple.png';
 import matcapYellowLightSource from '../assets/matcaps/yellowLight.png';
 import matcapYellowGlowSource from '../assets/matcaps/yellowGlow.png';
 
@@ -41,6 +42,7 @@ import carWheelSource from '../assets/models/car/wheel.glb';
 
 // Environment
 import envRoadSource from '../assets/models/env/road.glb';
+import treeSource from '../assets/models/tree.glb';
 
 import piston_topSource from '../assets/img/piston_top.png';
 import piston_bottomSource from '../assets/img/piston_bottom.png';
@@ -86,6 +88,7 @@ export default class Resources extends EventEmitter {
         { name: 'matcapRedMatte', source: matcapRedMatteSource, type: 'texture' },
         { name: 'matcapRedMetal', source: matcapRedMetalSource, type: 'texture' },
         { name: 'matcapRedGlow', source: matcapRedGlowSource, type: 'texture' },
+        { name: 'matcapPurple', source: matcapPurpleSource, type: 'texture'},
         { name: 'matcapYellowLight', source: matcapYellowLightSource, type: 'texture' },
         { name: 'matcapYellowGlow', source: matcapYellowGlowSource, type: 'texture' },
 
@@ -95,6 +98,7 @@ export default class Resources extends EventEmitter {
 
         // Environment
         { name: 'envRoad', source: envRoadSource},
+        { name: 'tree', source: treeSource },
 
         // Piston
         { name: 'piston_top', source: piston_topSource },

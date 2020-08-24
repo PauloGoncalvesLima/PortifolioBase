@@ -141,8 +141,23 @@ export default class Objects {
                     parser = this.parsers.default;
                 }
 
+                // make sure to parse any children mesh
+                const newGroup = new THREE.Group();
+                if (_child.children.length) {
+                    const baseMeshChildren = [..._child.children]; // prevents object skipping
+                    for (const _meshChild of baseMeshChildren) {
+                        this.preparse(_meshChild, newGroup);
+                    }
+                }
+
                 // apply parser to create mesh
                 const mesh = parser.apply(_child, _options);
+
+                // assign children to new mesh
+                const baseGroupChildren = [...newGroup.children]; // prevents object skipping
+                for (const _groupChild of baseGroupChildren) {
+                    mesh.add(_groupChild);
+                }
 
                 // add mesh to container
                 _parent.add(mesh);

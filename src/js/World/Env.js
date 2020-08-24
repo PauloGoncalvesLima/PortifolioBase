@@ -30,6 +30,7 @@ export default class Env {
     setModels() {
         this.models = {};
         this.models.road = this.resources.items.envRoad;
+        this.models.tree = this.resources.items.tree;
     }
 
     // FIXME: make this only load the road, not decour
@@ -44,7 +45,6 @@ export default class Env {
         this.road.options.position = new THREE.Vector3(72.5, -20, -0.172);
 
         // create
-        console.log(this.models.road.scene);
         this.road.object = this.objects.getConvertedMesh(this.models.road.scene.children);
         this.road.object.position.copy(this.road.options.position);
         this.container.add(this.road.object);

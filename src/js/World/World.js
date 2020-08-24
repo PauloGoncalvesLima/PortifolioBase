@@ -81,9 +81,10 @@ export default class {
 
         // method to initiate reveal process
         this.reveal.go = () => {
-            // matcap reveal
-            let step = this.reveal.matcapsProgress + (1 - this.reveal.matcapsProgress) / 2;
-            this.reveal.matcapsProgress = step > 1 ? 1 : step;
+            // matcap reveal TODO: fix reveal
+            // let step = this.reveal.matcapsProgress + (1 - this.reveal.matcapsProgress) / 2;
+            // this.reveal.matcapsProgress = step > 1 ? 1 : step;
+            this.reveal.matcapsProgress = 1;
             // TODO: shadows
 
             // car setup
@@ -196,6 +197,7 @@ export default class {
     setEnv() {
         this.env = new Env({
             resources: this.resources,
+            objects: this.objects,
             config: this.config,
             debug: this.debug
         });

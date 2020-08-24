@@ -80,7 +80,7 @@ export default class Car {
         this.chassis = {};
         this.chassis.offset = new THREE.Vector3(0, 0, - 0.28);
         console.log(this.models.chassis.scene);
-        const meshOptions = { duplicated: true };
+        const meshOptions = { duplicated: true }; // TODO: remove
         this.chassis.object = this.objects.getConvertedMesh(this.models.chassis.scene.children, meshOptions);
         console.log(this.chassis.object);
         this.chassis.object.position.copy(this.physics.car.chassis.body.position);

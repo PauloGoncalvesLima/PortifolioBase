@@ -7,6 +7,7 @@ export default class Env {
     constructor(_options) {
         // options
         this.resources = _options.resources;
+        this.objects = _options.objects;
         this.config = _options.config;
         this.debug = _options.debug;
 
@@ -43,7 +44,8 @@ export default class Env {
         this.road.options.position = new THREE.Vector3(72.5, -20, -0.172);
 
         // create
-        this.road.object = this.models.road.scene;
+        console.log(this.models.road.scene);
+        this.road.object = this.objects.getConvertedMesh(this.models.road.scene.children);
         this.road.object.position.copy(this.road.options.position);
         this.container.add(this.road.object);
         // TODO: set collision, depends on Object.js

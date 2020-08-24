@@ -5,11 +5,34 @@ import Loader from './utils/Loader';
 
 // Matcaps
 import matcapBlackSource from '../assets/matcaps/black.png';
+import matcapBlackMatteSource from '../assets/matcaps/blackMatte.png';
 import matcapWhiteSource from '../assets/matcaps/white.png';
+import matcapWhiteClothSource from '../assets/matcaps/whiteCloth.png';
+import matcapGreySource from '../assets/matcaps/grey.png';
+import matcapGreyGreenSource from '../assets/matcaps/greyGreen.png';
 import matcapGreyMetalSource from '../assets/matcaps/greyMetal.png';
+import matcapBeigeSource from '../assets/matcaps/beige.png';
+import matcapBeigeLightSource from '../assets/matcaps/beigeLight.png';
+import matcapBlueSource from '../assets/matcaps/blue.png';
+import matcapBlueClothSource from '../assets/matcaps/blueCloth.png';
+import matcapBlueLightMatteSource from '../assets/matcaps/blueLightMatte.png';
+import matcapBlueMatteSource from '../assets/matcaps/blueMatte.png';
+import matcapCyanMatteSource from '../assets/matcaps/cyanMatte.png';
+import matcapBrownSource from '../assets/matcaps/brown.png';
+import matcapBrownDarkSource from '../assets/matcaps/brownDark.png';
+import matcapBrownVeryDarkSource from '../assets/matcaps/brownVeryDark.png';
+import matcapGreenSource from '../assets/matcaps/green.png';
+import matcapGreenBrightSource from '../assets/matcaps/greenBright.png';
+import matcapGreenDarkSource from '../assets/matcaps/greenDark.png';
+import matcapGreenMatteSource from '../assets/matcaps/greenMatte.png';
+import matcapOrangeMatteSource from '../assets/matcaps/orangeMatte.png';
 import matcapOrangeMetalSource from '../assets/matcaps/orangeMetal.png';
+import matcapRedBrightSource from '../assets/matcaps/redBright.png';
+import matcapRedClothSource from '../assets/matcaps/redCloth.png';
+import matcapRedMatteSource from '../assets/matcaps/redMatte.png';
 import matcapRedMetalSource from '../assets/matcaps/redMetal.png';
 import matcapRedGlowSource from '../assets/matcaps/redGlow.png';
+import matcapYellowLightSource from '../assets/matcaps/yellowLight.png';
 import matcapYellowGlowSource from '../assets/matcaps/yellowGlow.png';
 
 // Car
@@ -36,11 +59,34 @@ export default class Resources extends EventEmitter {
       this.loader.load([
         // Matcaps
         { name: 'matcapBlack', source: matcapBlackSource, type: 'texture' },
+        { name: 'matcapBlackMatte', source: matcapBlackMatteSource, type: 'texture' },
         { name: 'matcapWhite', source: matcapWhiteSource, type: 'texture' },
+        { name: 'matcapWhiteCloth', source: matcapWhiteClothSource, type: 'texture' },
+        { name: 'matcapGrey', source: matcapGreySource, type: 'texture' },
+        { name: 'matcapGreyGreen', source: matcapGreyGreenSource, type: 'texture' },
         { name: 'matcapGreyMetal', source: matcapGreyMetalSource, type: 'texture' },
+        { name: 'matcapBeige', source: matcapBeigeSource, type: 'texture' },
+        { name: 'matcapBeigeLight', source: matcapBeigeLightSource, type: 'texture' },
+        { name: 'matcapBlue', source: matcapBlueSource, type: 'texture' },
+        { name: 'matcapBlueCloth', source: matcapBlueClothSource, type: 'texture' },
+        { name: 'matcapBlueLightMatte', source: matcapBlueLightMatteSource, type: 'texture' },
+        { name: 'matcapBlueMatte', source: matcapBlueMatteSource, type: 'texture' },
+        { name: 'matcapCyanMatte', source: matcapCyanMatteSource, type: 'texture' },
+        { name: 'matcapBrown', source: matcapBrownSource, type: 'texture' },
+        { name: 'matcapBrownDark', source: matcapBrownDarkSource, type: 'texture' },
+        { name: 'matcapBrownVeryDark', source: matcapBrownVeryDarkSource, type: 'texture' },
+        { name: 'matcapGreen', source: matcapGreenSource, type: 'texture' },
+        { name: 'matcapGreenBright', source: matcapGreenBrightSource, type: 'texture' },
+        { name: 'matcapGreenDark', source: matcapGreenDarkSource, type: 'texture' },
+        { name: 'matcapGreenMatte', source: matcapGreenMatteSource, type: 'texture' },
+        { name: 'matcapOrangeMatte', source: matcapOrangeMatteSource, type: 'texture' },
         { name: 'matcapOrangeMetal', source: matcapOrangeMetalSource, type: 'texture' },
+        { name: 'matcapRedBright', source: matcapRedBrightSource, type: 'texture' },
+        { name: 'matcapRedCloth', source: matcapRedClothSource, type: 'texture' },
+        { name: 'matcapRedMatte', source: matcapRedMatteSource, type: 'texture' },
         { name: 'matcapRedMetal', source: matcapRedMetalSource, type: 'texture' },
         { name: 'matcapRedGlow', source: matcapRedGlowSource, type: 'texture' },
+        { name: 'matcapYellowLight', source: matcapYellowLightSource, type: 'texture' },
         { name: 'matcapYellowGlow', source: matcapYellowGlowSource, type: 'texture' },
 
         // Car

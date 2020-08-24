@@ -67,11 +67,35 @@ export default class Materials {
         this.shades.items.black.uniforms.matcap.value = this.resources.items.matcapBlackTexture;
         this.items.black = this.shades.items.black;
 
+        // blackMatte
+        this.shades.items.blackMatte = new MatcapMaterial();
+        this.shades.items.blackMatte.name = 'shadeBlackMatte';
+        this.shades.items.blackMatte.uniforms.matcap.value = this.resources.items.matcapBlackMatteTexture;
+        this.items.blackMatte = this.shades.items.blackMatte;
+
         // white
         this.shades.items.white = new MatcapMaterial();
         this.shades.items.white.name = 'shadeWhite';
         this.shades.items.white.uniforms.matcap.value = this.resources.items.matcapWhiteTexture;
         this.items.white = this.shades.items.white;
+
+        // whiteCloth
+        this.shades.items.whiteCloth = new MatcapMaterial();
+        this.shades.items.whiteCloth.name = 'shadeWhiteCloth';
+        this.shades.items.whiteCloth.uniforms.matcap.value = this.resources.items.matcapWhiteClothTexture;
+        this.items.whiteCloth = this.shades.items.whiteCloth;
+
+        // grey
+        this.shades.items.grey = new MatcapMaterial();
+        this.shades.items.grey.name = 'shadeGrey';
+        this.shades.items.grey.uniforms.matcap.value = this.resources.items.matcapGreyTexture;
+        this.items.grey = this.shades.items.grey;
+
+        // greyGreen
+        this.shades.items.greyGreen = new MatcapMaterial();
+        this.shades.items.greyGreen.name = 'shadeGreyGreen';
+        this.shades.items.greyGreen.uniforms.matcap.value = this.resources.items.matcapGreyGreenTexture;
+        this.items.greyGreen = this.shades.items.greyGreen;
 
         // greyMetal
         this.shades.items.greyMetal = new MatcapMaterial();
@@ -79,11 +103,119 @@ export default class Materials {
         this.shades.items.greyMetal.uniforms.matcap.value = this.resources.items.matcapGreyMetalTexture;
         this.items.greyMetal = this.shades.items.greyMetal;
 
+        // beige
+        this.shades.items.beige = new MatcapMaterial();
+        this.shades.items.beige.name = 'shadeBeige';
+        this.shades.items.beige.uniforms.matcap.value = this.resources.items.matcapBeigeTexture;
+        this.items.beige = this.shades.items.beige;
+
+        // beigeLight
+        this.shades.items.beigeLight = new MatcapMaterial();
+        this.shades.items.beigeLight.name = 'shadeBeigeLight';
+        this.shades.items.beigeLight.uniforms.matcap.value = this.resources.items.matcapBeigeLightTexture;
+        this.items.beigeLight = this.shades.items.beigeLight;
+
+        // blue
+        this.shades.items.blue = new MatcapMaterial();
+        this.shades.items.blue.name = 'shadeBlue';
+        this.shades.items.blue.uniforms.matcap.value = this.resources.items.matcapBlueTexture;
+        this.items.blue = this.shades.items.blue;
+
+        // blueCloth
+        this.shades.items.blueCloth = new MatcapMaterial();
+        this.shades.items.blueCloth.name = 'shadeBlueCloth';
+        this.shades.items.blueCloth.uniforms.matcap.value = this.resources.items.matcapBlueClothTexture;
+        this.items.blueCloth = this.shades.items.blueCloth;
+
+        // blueLightMatte
+        this.shades.items.blueLightMatte = new MatcapMaterial();
+        this.shades.items.blueLightMatte.name = 'shadeBlueLightMatte';
+        this.shades.items.blueLightMatte.uniforms.matcap.value = this.resources.items.matcapBlueLightMatteTexture;
+        this.items.blueLightMatte = this.shades.items.blueLightMatte;
+
+        // blueMatte
+        this.shades.items.blueMatte = new MatcapMaterial();
+        this.shades.items.blueMatte.name = 'shadeBlueMatte';
+        this.shades.items.blueMatte.uniforms.matcap.value = this.resources.items.matcapBlueMatteTexture;
+        this.items.blueMatte = this.shades.items.blueMatte;
+
+        // cyanMatte
+        this.shades.items.cyanMatte = new MatcapMaterial();
+        this.shades.items.cyanMatte.name = 'shadeCyanMatte';
+        this.shades.items.cyanMatte.uniforms.matcap.value = this.resources.items.matcapCyanMatteTexture;
+        this.items.cyanMatte = this.shades.items.cyanMatte;
+
+        // brown
+        this.shades.items.brown = new MatcapMaterial();
+        this.shades.items.brown.name = 'shadeBrown';
+        this.shades.items.brown.uniforms.matcap.value = this.resources.items.matcapBrownTexture;
+        this.items.brown = this.shades.items.brown;
+
+        // brownDark
+        this.shades.items.brownDark = new MatcapMaterial();
+        this.shades.items.brownDark.name = 'shadeBrownDark';
+        this.shades.items.brownDark.uniforms.matcap.value = this.resources.items.matcapBrownDarkTexture;
+        this.items.brownDark = this.shades.items.brownDark;
+
+        // brownVeryDark
+        this.shades.items.brownVeryDark = new MatcapMaterial();
+        this.shades.items.brownVeryDark.name = 'shadeBrownVeryDark';
+        this.shades.items.brownVeryDark.uniforms.matcap.value = this.resources.items.matcapBrownVeryDarkTexture;
+        this.items.brownVeryDark = this.shades.items.brownVeryDark;
+
+        // green
+        this.shades.items.green = new MatcapMaterial();
+        this.shades.items.green.name = 'shadeGreen';
+        this.shades.items.green.uniforms.matcap.value = this.resources.items.matcapGreenTexture;
+        this.items.green = this.shades.items.green;
+
+        // greenBright
+        this.shades.items.greenBright = new MatcapMaterial();
+        this.shades.items.greenBright.name = 'shadeGreenBright';
+        this.shades.items.greenBright.uniforms.matcap.value = this.resources.items.matcapGreenBrightTexture;
+        this.items.greenBright = this.shades.items.greenBright;
+
+        // greenDark
+        this.shades.items.greenDark = new MatcapMaterial();
+        this.shades.items.greenDark.name = 'shadeGreenDark';
+        this.shades.items.greenDark.uniforms.matcap.value = this.resources.items.matcapGreenDarkTexture;
+        this.items.greenDark = this.shades.items.greenDark;
+
+        // greenMatte
+        this.shades.items.greenMatte = new MatcapMaterial();
+        this.shades.items.greenMatte.name = 'shadeGreenMatte';
+        this.shades.items.greenMatte.uniforms.matcap.value = this.resources.items.matcapGreenMatteTexture;
+        this.items.greenMatte = this.shades.items.greenMatte;
+
+        // orangeMatte
+        this.shades.items.orangeMatte = new MatcapMaterial();
+        this.shades.items.orangeMatte.name = 'shadeOrangeMatte';
+        this.shades.items.orangeMatte.uniforms.matcap.value = this.resources.items.matcapOrangeMatteTexture;
+        this.items.orangeMatte = this.shades.items.orangeMatte;
+
         // orangeMetal
         this.shades.items.orangeMetal = new MatcapMaterial();
         this.shades.items.orangeMetal.name = 'shadeOrangeMetal';
         this.shades.items.orangeMetal.uniforms.matcap.value = this.resources.items.matcapOrangeMetalTexture;
         this.items.orangeMetal = this.shades.items.orangeMetal;
+
+        // redBright
+        this.shades.items.redBright = new MatcapMaterial();
+        this.shades.items.redBright.name = 'shadeRedBright';
+        this.shades.items.redBright.uniforms.matcap.value = this.resources.items.matcapRedBrightTexture;
+        this.items.redBright = this.shades.items.redBright;
+
+        // redCloth
+        this.shades.items.redCloth = new MatcapMaterial();
+        this.shades.items.redCloth.name = 'shadeRedCloth';
+        this.shades.items.redCloth.uniforms.matcap.value = this.resources.items.matcapRedClothTexture;
+        this.items.redCloth = this.shades.items.redCloth;
+
+        // redMatte
+        this.shades.items.redMatte = new MatcapMaterial();
+        this.shades.items.redMatte.name = 'shadeRedMatte';
+        this.shades.items.redMatte.uniforms.matcap.value = this.resources.items.matcapRedMatteTexture;
+        this.items.redMatte = this.shades.items.redMatte;
 
         // redMetal
         this.shades.items.redMetal = new MatcapMaterial();
@@ -96,6 +228,12 @@ export default class Materials {
         this.shades.items.redGlow.name = 'shadeRedGlow';
         this.shades.items.redGlow.uniforms.matcap.value = this.resources.items.matcapRedGlowTexture;
         this.items.redGlow = this.shades.items.redGlow;
+
+        // yellowLight
+        this.shades.items.yellowLight = new MatcapMaterial();
+        this.shades.items.yellowLight.name = 'shadeYellowLight';
+        this.shades.items.yellowLight.uniforms.matcap.value = this.resources.items.matcapYellowLightTexture;
+        this.items.yellowLight = this.shades.items.yellowLight;
 
         // yellowGlow
         this.shades.items.yellowGlow = new MatcapMaterial();

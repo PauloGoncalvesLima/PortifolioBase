@@ -49,7 +49,7 @@ export default class Materials {
         this.shades.items = {};
         
         // options
-        this.shades.indirectColor = "#D04500";
+        this.shades.indirectColor = "#0E0E34";
         this.shades.uniforms = {
             uRevealProgress: 0,
             uIndirectDistanceAmplitude: 1.75,

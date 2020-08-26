@@ -55,7 +55,7 @@ export default class Application {
     setRenderer() {
         // set up scene
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color( "#5DAAFA" );
+        this.scene.background = new THREE.Color( "#92DFF7" );
 
 
         // set up renderer

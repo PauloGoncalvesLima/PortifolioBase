@@ -93,16 +93,16 @@ export default class Objects {
             apply: (_mesh, _options) => {
                 // create clone mesh with default normal material
                 const mesh = _options.duplicated ? _mesh.clone() : _mesh;
-                let material = new THREE.MeshNormalMaterial();
-                mesh.material = material;
+                // let material = new THREE.MeshNormalMaterial();
+                // mesh.material = material;
 
-                if (mesh.children.length) {
-                    for (const _child of mesh.children) {
-                        if (_child instanceof THREE.Mesh) {
-                            _child.material = material;
-                        }
-                    }
-                }
+                // if (mesh.children.length) {
+                //     for (const _child of mesh.children) {
+                //         if (_child instanceof THREE.Mesh) {
+                //             _child.material = material;
+                //         }
+                //     }
+                // }
 
                 return mesh;
             }

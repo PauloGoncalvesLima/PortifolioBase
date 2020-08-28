@@ -74,7 +74,7 @@ export default class {
 
     setReveal() {
         this.reveal = {};
-        this.reveal.matcapsProgress = 0;
+        this.reveal.matcapsProgress = 1;
         // this.reveal.floorShadowsProgress = 0;
         this.reveal.previousMatcapsProgress = null;
         // this.reveal.previousFloorShadowsProgress = null;

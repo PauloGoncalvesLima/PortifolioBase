@@ -8,6 +8,13 @@ import Time from './utils/Time.js';
 import Resources from './Resources.js';
 import Camera from './Camera.js';
 
+// postprocess effects
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import BlurPass from './Passes/Blur.js'
+import GlowsPass from './Passes/Glows.js'
+
 import World from './World/World.js';
 
 export default class Application {
@@ -28,7 +35,7 @@ export default class Application {
         this.setDebug();
         this.setRenderer();
         this.setCamera();
-        // this.setPasses();
+        this.setPasses();
         this.setWorld();
         // this.setTitle();
     }
@@ -77,10 +84,10 @@ export default class Application {
         });
 
         // render scene TODO: must change if post process passes are added.
-        this.time.on('update', () => {
-            // console.log('rendering stuff');
-            this.renderer.render(this.scene, this.camera.instance);
-        });
+        // this.time.on('update', () => {
+        //     // console.log('rendering stuff');
+        //     this.renderer.render(this.scene, this.camera.instance);
+        // });
     }
 
     /**
@@ -109,6 +116,86 @@ export default class Application {
                 this.camera.direction.x = this.world.car.movement.direction.x;
                 this.camera.direction.y = this.world.car.movement.direction.y;
             }
+        });
+    }
+
+    /**
+     * Sets post processing effects for rendering,
+     * as well as rendering image on each update.
+     */
+    setPasses() {
+        this.passes = {};
+
+        // composer
+        this.passes.composer = new EffectComposer(this.renderer);
+
+        // create each pass
+        this.passes.renderPass = new RenderPass(this.scene, this.camera.instance);
+
+        // blur passes
+        // horizontal
+        this.passes.horizontalBlurPass = new ShaderPass(BlurPass);
+        this.passes.horizontalBlurPass.strength = this.config.touch ? 0 : 1;
+        this.passes.horizontalBlurPass.material.uniforms.uResolution.value = new THREE.Vector2(this.sizes.viewport.width, this.sizes.viewport.height);
+        this.passes.horizontalBlurPass.material.uniforms.uStrength.value = new THREE.Vector2(this.passes.horizontalBlurPass.strength, 0);
+
+        // vertical
+        this.passes.verticalBlurPass = new ShaderPass(BlurPass);
+        this.passes.verticalBlurPass.strength = this.config.touch ? 0 : 1;
+        this.passes.verticalBlurPass.material.uniforms.uResolution.value = new THREE.Vector2(this.sizes.viewport.width, this.sizes.viewport.height);
+        this.passes.verticalBlurPass.material.uniforms.uStrength.value = new THREE.Vector2(this.passes.horizontalBlurPass.strength, 0);
+
+        // glow pass
+        this.passes.glowsPass = new ShaderPass(GlowsPass);
+        this.passes.glowsPass.color = '#FFF2BB' // light pink/red
+        this.passes.glowsPass.material.uniforms.uPosition.value = new THREE.Vector2(0, 1);
+        this.passes.glowsPass.material.uniforms.uRadius.value = 0.5;
+        this.passes.glowsPass.material.uniforms.uColor.value = new THREE.Color(this.passes.glowsPass.color);
+        this.passes.glowsPass.material.uniforms.uAlpha.value = 0.4;
+
+        // debug
+        if (this.debug) {
+            this.passes.debugFolder = this.debug.addFolder('postprocess');
+            
+            const blurFolder = this.passes.debugFolder.addFolder('blur');
+            blurFolder.add(this.passes.horizontalBlurPass.material.uniforms.uStrength.value, 'x').step(0.001).min(0).max(10);
+            blurFolder.add(this.passes.verticalBlurPass.material.uniforms.uStrength.value, 'y').step(0.001).min(0).max(10);
+            blurFolder.open();
+
+            const glowsFolder = this.passes.debugFolder.addFolder('glows');
+            glowsFolder.add(this.passes.glowsPass.material.uniforms.uPosition.value, 'x').step(0.001).min(-1).max(2).name('positionX');
+            glowsFolder.add(this.passes.glowsPass.material.uniforms.uPosition.value, 'y').step(0.001).min(-1).max(2).name('positionY');
+            glowsFolder.add(this.passes.glowsPass.material.uniforms.uRadius, 'value').step(0.001).min(0).max(2).name('radius');
+            glowsFolder.addColor(this.passes.glowsPass, 'color').name('color').onChange(() => {
+                this.passes.glowsPass.material.uniforms.uColor.value = new THREE.Color(this.passes.glowsPass.color);
+            });
+            glowsFolder.add(this.passes.glowsPass.material.uniforms.uAlpha, 'value').step(0.001).min(0).max(1).name('alpha');
+            glowsFolder.open();
+        }
+
+        // add passes to composer
+        this.passes.composer.addPass(this.passes.renderPass);
+        this.passes.composer.addPass(this.passes.horizontalBlurPass);
+        this.passes.composer.addPass(this.passes.verticalBlurPass);
+        this.passes.composer.addPass(this.passes.glowsPass);
+
+        // resize
+        this.sizes.on('resize', () => {
+            this.passes.composer.setSize(this.sizes.viewport.width, this.sizes.viewport.height);
+            this.passes.horizontalBlurPass.material.uniforms.uResolution.value.x = this.sizes.viewport.width;
+            this.passes.horizontalBlurPass.material.uniforms.uResolution.value.y = this.sizes.viewport.height;
+            this.passes.verticalBlurPass.material.uniforms.uResolution.value.x = this.sizes.viewport.width;
+            this.passes.verticalBlurPass.material.uniforms.uResolution.value.y = this.sizes.viewport.height;
+        });
+
+        // update
+        this.time.on('update', () => {
+            // disable at zero value
+            this.passes.horizontalBlurPass.enabled = this.passes.horizontalBlurPass.material.uniforms.uStrength.value.x > 0;
+            this.passes.verticalBlurPass.enabled = this.passes.verticalBlurPass.material.uniforms.uStrength.value.y > 0;
+
+            // render
+            this.passes.composer.render();
         });
     }
 

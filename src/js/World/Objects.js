@@ -198,6 +198,72 @@ export default class Objects {
     }
 
     add(_options) {
-        // TODO:
+        const object = {};
+
+        object.merged = false;
+        object.shouldMerge = _options.mass === 0;
+
+        // offset
+        const offset = new THREE.Vector3();
+        if (_options.offset) {
+            offset.copy(_options.offset);
+        }
+
+        // rotation
+        const rotation = new THREE.Euler();
+        if (_options.rotation) {
+            rotation.copy(_options.rotation);
+        }
+
+        // sleep
+        const sleep = typeof _options.sleep === 'undefined' ? true : _options.sleep;
+
+        // three js model (container)
+        object.container = this.getConvertedMesh(_options.base.children, _options);
+        object.container.position.copy(offset);
+        object.container.rotation.copy(rotation);
+        this.container.add(object.container);
+
+        // deactivate matrix auto update
+        if (_options.mass === 0) {
+            object.container.matrixAutoUpdate = false;
+            object.container.updateMatrix();
+
+            // FIXME: handle groups and parenting
+            for (const _child of object.container.children) {
+                _child.matrixAutoUpdate = false;
+                _child.updateMatrix()
+            }
+        }
+
+        // create physics object (hitbox)
+        object.collision = this.physics.addObjectFromThree({
+            meshes: [..._options.collision.children],
+            offset,
+            rotation,
+            mass: _options.mass,
+            sleep
+        });
+
+        // recenter FIXME: maybe needs to handle groups and parenting
+        for (const _child of object.container.children) {
+            _child.position.sub(object.collision.center);
+        }
+
+        // TODO: Sound
+
+        // TODO: Shadow
+
+        // update position if dynamic
+        if (_options.mass > 0) {
+            this.time.on('update', () => {
+                object.container.position.copy(object.collision.body.position);
+                object.container.quaternion.copy(object.collision.body.quaternion);
+            });
+        }
+
+        // save to items and return to caller
+        this.items.push(object);
+        return object;
     }
 }

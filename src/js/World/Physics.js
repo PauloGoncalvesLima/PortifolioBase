@@ -620,7 +620,7 @@ export default class Physics {
     // shapes
     const shapes = [];
 
-    // for each mesh define the type to add in cannonJs down bellow
+    // for each mesh define the type to add in cannon js down bellow
     for (let i = 0; i < _options.meshes.length; i++) {
       const mesh = _options.meshes[i];
 
@@ -657,7 +657,7 @@ export default class Physics {
           console.log('unamed shape') // TODO: better debug message
       }
 
-      // other shape
+      // shape is not center
       if (shape && shape != 'center') {
 
         // position

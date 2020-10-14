@@ -56,6 +56,7 @@ import carWheelSource from '../assets/models/car/wheel.glb';
 
 // Environment
 import envRoadSource from '../assets/models/env/road.glb';
+import envRoadCollisionSource from '../assets/models/env/collision.glb';
 import treeSource from '../assets/models/tree.glb';
 
 import piston_topSource from '../assets/img/piston_top.png';
@@ -126,6 +127,7 @@ export default class Resources extends EventEmitter {
 
         // Environment
         { name: 'envRoad', source: envRoadSource},
+        { name: 'envRoadCollision', source: envRoadCollisionSource},
         { name: 'tree', source: treeSource },
 
         // Piston

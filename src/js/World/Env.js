@@ -30,6 +30,7 @@ export default class Env {
     setModels() {
         this.models = {};
         this.models.road = this.resources.items.envRoad;
+        this.models.roadCollision = this.resources.items.envRoadCollision;
         this.models.tree = this.resources.items.tree;
     }
 
@@ -39,15 +40,24 @@ export default class Env {
      */
     setRoad() {
         this.road = {};
+        this.tree = {};
 
         // options
         this.road.options = {};
         this.road.options.position = new THREE.Vector3(72.5, -20, -0.172);
 
         // create
-        this.road.object = this.objects.getConvertedMesh(this.models.road.scene.children);
-        this.road.object.position.copy(this.road.options.position);
-        this.container.add(this.road.object);
+        // this.road.object = this.objects.getConvertedMesh(this.models.road.scene.children);
+        console.log(this.models.roadCollision.scene.children);
+        this.road.object = this.objects.add({
+            mass: 0,
+            base: this.models.road.scene,
+            collision: this.models.roadCollision.scene,
+            offset: this.road.options.position,
+            sleep: false
+        });
+        // this.road.object.container.position.copy(this.road.options.position);
+        // this.container.add(this.road.object);
         // TODO: set collision, depends on Object.js
 
         // update properties on debug

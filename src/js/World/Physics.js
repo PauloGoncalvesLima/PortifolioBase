@@ -1,4 +1,4 @@
-import * as CANNON from 'cannon-es';
+import * as CANNON from 'cannon';
 import * as THREE from 'three';
 
 export default class Physics {
@@ -276,15 +276,15 @@ export default class Physics {
       // create CANNON body for each wheel
       this.car.wheels.bodies = [];
       for (const _wheelInfos of this.car.vehicle.wheelInfos) {
-          const shape = new CANNON.Cylinder(_wheelInfos.radius, _wheelInfos.radius, this.car.wheels.options.height, 20)
-          const body = new CANNON.Body({ mass: this.car.options.wheelMass, material: this.materials.items.wheel })
-          const quaternion = new CANNON.Quaternion()
-          quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2)
+          const shape = new CANNON.Cylinder(_wheelInfos.radius, _wheelInfos.radius, this.car.wheels.options.height, 20);
+          const body = new CANNON.Body({ mass: this.car.options.wheelMass, material: this.materials.items.wheel });
+          const quaternion = new CANNON.Quaternion();
+          quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
 
-          body.type = CANNON.Body.KINEMATIC
+          body.type = CANNON.Body.KINEMATIC;
 
-          body.addShape(shape, new CANNON.Vec3(), quaternion)
-          this.car.wheels.bodies.push(body)
+          body.addShape(shape, new CANNON.Vec3(), quaternion);
+          this.car.wheels.bodies.push(body);
       }
 
       /**
@@ -605,7 +605,7 @@ export default class Physics {
       collision.body.sleep();
     }
 
-    this.world.addBody(collision.body); 
+    this.world.addBody(collision.body);
 
     // rotation (WHAT IS GOING ON HERE?) we still don't know
     if (_options.rotation) {
@@ -636,23 +636,31 @@ export default class Physics {
           shape = 'sphere';
       } else if(mesh.name.match(/^center_?[0-9]{0,3}?$/i)) {
           shape = 'center';
+      } else { // FIXME: make sure name matches 'trimesh'
+        shape = 'trimesh';
       }
 
       let shapeGeometry = null;
       switch (shape) {
-        case shape === 'center':
+        case 'center':
           collision.center.set(mesh.position.x, mesh.position.y, mesh.position.z);
-          break
-        case shape === 'cylinder':
+          break;
+        case 'cylinder':
           shapeGeometry = new CANNON.Cylinder(mesh.scale.x, mesh.scale.x, mesh.scale.z, 8);
-          break
-        case shape === 'box':
+          break;
+        case 'box':
           const halfExtents = new CANNON.Vec3(mesh.scale.x * 0.5, mesh.scale.y * 0.5, mesh.scale.z * 0.5);
           shapeGeometry = new CANNON.Box(halfExtents);
-          break
-        case shape === 'sphere':
+          break;
+        case 'sphere':
           shapeGeometry = new CANNON.Sphere(mesh.scale.x);
-          break
+          break;
+        case 'trimesh':
+          var vertices = mesh.geometry.getAttribute('position').array;
+          var indices = mesh.geometry.getIndex().array;
+          shapeGeometry = new CANNON.Trimesh(vertices, indices);
+          // shapeGeometry.setScale(new CANNON.Vec3(26,26,26));
+          break;
         default:
           console.log('unamed shape') // TODO: better debug message
       }
@@ -682,6 +690,17 @@ export default class Physics {
           case 'sphere':
             modelGeometry = new THREE.SphereBufferGeometry(1, 8, 8);
             break;
+          case 'trimesh':
+            var vertices = mesh.geometry.getAttribute('position').array;
+            var indices = mesh.geometry.getIndex().array;
+            modelGeometry = new THREE.Geometry();
+            for (let i = 0; i < vertices.length; i += 3) {
+              modelGeometry.vertices.push(new THREE.Vector3(vertices[i], vertices[i+1], vertices[i+2]));
+            }
+            for (let i = 0; i < indices.length; i += 3) {
+              modelGeometry.faces.push(new THREE.Face3(indices[i], indices[i+1], indices[i+2]));
+            }
+            break;
           default:
             console.log('unamed shape') // TODO: better debug message
         }
@@ -707,9 +726,10 @@ export default class Physics {
 
     // updates shapes to match center (cannon)
     for (const _shape of shapes) {
-      _shape.position.x -= collision.center.x;
-      _shape.position.y -= collision.center.y;
-      _shape.position.z -= collision.center.z;
+      console.log(_shape);
+      _shape.shapePosition.x -= collision.center.x;
+      _shape.shapePosition.y -= collision.center.y;
+      _shape.shapePosition.z -= collision.center.z;
 
       collision.body.addShape(_shape.shapeGeometry, _shape.shapePosition, _shape.shapeQuaternion);
     }

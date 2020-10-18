@@ -628,8 +628,9 @@ export default class Physics {
       let shape = null;
 
       // Regex that compares to the names on blender file and defines the shape that will be added in cannon
-      if (mesh.name.match(/^cube_?[0-9]{0-3}?|box[0-9]{0,3}?$/i)) {
-        shape = "box";
+      if (mesh.name.match(/^cube_?[0-9]{0,3}?|box[0-9]{0,3}?$/i)) {
+          shape = "box";
+          console.log('box:' + mesh.name);
       } else if(mesh.name.match(/^cylinder_?[0-9]{0,3}?$/i)) {
           shape = 'cylinder';
       } else if(mesh.name.match(/^sphere_?[0-9]{0,3}?$/i)) {
@@ -637,7 +638,8 @@ export default class Physics {
       } else if(mesh.name.match(/^center_?[0-9]{0,3}?$/i)) {
           shape = 'center';
       } else { // FIXME: make sure name matches 'trimesh'
-        shape = 'trimesh';
+          shape = 'trimesh';
+          console.log('tri:' + mesh.name);
       }
 
       let shapeGeometry = null;
@@ -649,7 +651,7 @@ export default class Physics {
           shapeGeometry = new CANNON.Cylinder(mesh.scale.x, mesh.scale.x, mesh.scale.z, 8);
           break;
         case 'box':
-          const halfExtents = new CANNON.Vec3(mesh.scale.x * 0.5, mesh.scale.y * 0.5, mesh.scale.z * 0.5);
+          const halfExtents = new CANNON.Vec3(mesh.scale.x, mesh.scale.y, mesh.scale.z);
           shapeGeometry = new CANNON.Box(halfExtents);
           break;
         case 'sphere':
@@ -659,7 +661,6 @@ export default class Physics {
           var vertices = mesh.geometry.getAttribute('position').array;
           var indices = mesh.geometry.getIndex().array;
           shapeGeometry = new CANNON.Trimesh(vertices, indices);
-          // shapeGeometry.setScale(new CANNON.Vec3(26,26,26));
           break;
         default:
           console.log('unamed shape') // TODO: better debug message
@@ -685,12 +686,13 @@ export default class Physics {
             modelGeometry.rotateX(Math.PI * 0.5);
             break;
           case 'box': 
-            modelGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
+            modelGeometry = new THREE.BoxBufferGeometry(2, 2, 2);
             break;
           case 'sphere':
             modelGeometry = new THREE.SphereBufferGeometry(1, 8, 8);
             break;
           case 'trimesh':
+            // recreate mesh in three.js (might not be needed)
             var vertices = mesh.geometry.getAttribute('position').array;
             var indices = mesh.geometry.getIndex().array;
             modelGeometry = new THREE.Geometry();
@@ -726,7 +728,6 @@ export default class Physics {
 
     // updates shapes to match center (cannon)
     for (const _shape of shapes) {
-      console.log(_shape);
       _shape.shapePosition.x -= collision.center.x;
       _shape.shapePosition.y -= collision.center.y;
       _shape.shapePosition.z -= collision.center.z;

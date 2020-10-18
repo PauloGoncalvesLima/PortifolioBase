@@ -113,6 +113,7 @@ export default class Application {
             if (this.world && this.world.car) { // if car is on the scene
                 this.camera.target.x = this.world.car.chassis.object.position.x;
                 this.camera.target.y = this.world.car.chassis.object.position.y;
+                this.camera.target.z = this.world.car.chassis.object.position.z;
                 this.camera.direction.x = this.world.car.movement.direction.x;
                 this.camera.direction.y = this.world.car.movement.direction.y;
             }

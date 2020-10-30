@@ -111,6 +111,18 @@ export default class Physics {
       }
     );
     this.world.addContactMaterial(this.materials.contacts.floorWheel);
+
+    // Contact between dummy -- wheel
+    this.materials.contacts.dummyWheel = new CANNON.ContactMaterial(
+      this.materials.items.dummy,
+      this.materials.items.wheel,
+      {
+        friction: 0.3, 
+        restitution: 0,
+        contactEquationStiffness: 1000
+      }
+    );
+    this.world.addContactMaterial(this.materials.contacts.dummyWheel);
   }
 
   setFloor() {
@@ -630,7 +642,6 @@ export default class Physics {
       // Regex that compares to the names on blender file and defines the shape that will be added in cannon
       if (mesh.name.match(/^cube_?[0-9]{0,3}?|box[0-9]{0,3}?$/i)) {
           shape = "box";
-          console.log('box:' + mesh.name);
       } else if(mesh.name.match(/^cylinder_?[0-9]{0,3}?$/i)) {
           shape = 'cylinder';
       } else if(mesh.name.match(/^sphere_?[0-9]{0,3}?$/i)) {
@@ -639,7 +650,6 @@ export default class Physics {
           shape = 'center';
       } else { // FIXME: make sure name matches 'trimesh'
           shape = 'trimesh';
-          console.log('tri:' + mesh.name);
       }
 
       let shapeGeometry = null;

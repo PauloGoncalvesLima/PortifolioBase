@@ -6,6 +6,8 @@ import Controls from './Controls.js';
 import Env from './Env.js';
 import Car from './Car.js';
 import Lights from './Lights.js';
+// Sections
+import InformationSection from './Sections/InformationSection.js';
 // TODO: Import the stuff needed
 
 export default class {
@@ -37,7 +39,7 @@ export default class {
         // this.setSounds();
         this.setControls();
         // this.setFloor(); ?might not keep or change?
-        // this.setAreas(); ?might keep single area initialization?
+        this.setAreas();
         // this.setStartingScreen();
         this.resources.on('ready', () => {
             console.log('scene is ready to load');
@@ -159,6 +161,25 @@ export default class {
 
         // add physics models (wireframe) to world container
         this.container.add(this.physics.models.container);
+    }
+
+    /**
+     * Initializes areas.
+     */
+    setAreas() {
+        this.areas = new Areas({
+            config: this.config,
+            resources: this.resources,
+            debug: this.debug,
+            renderer: this.renderer,
+            camera: this.camera,
+            car: this.car,
+            sounds: this.sounds,
+            time: this.time
+        });
+
+        // add areas to world container
+        this.container.add(this.areas.container);
     }
 
     /**

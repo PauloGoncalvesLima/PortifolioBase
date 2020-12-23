@@ -28,6 +28,7 @@ export default class Time extends EventEmitter {
     
     const current = Date.now();
     this.delta = current - this.current; // time since last frame
+    // FIXME: elapsed time goes on forever
     this.elapsed = current - this.start; // time since first frame
     this.current = current; // update time now
 

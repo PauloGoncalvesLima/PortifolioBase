@@ -153,6 +153,7 @@ export default class Area extends EventEmitter {
         this.key.container.add(this.key.icon.mesh)
     }
 
+    // Triggers the area interaction result.
     interact(_showKey = true) {
         // Not active
         if (!this.active) {
@@ -182,22 +183,26 @@ export default class Area extends EventEmitter {
                 })
                 gsap.fromTo(this.floorBorder.material.uniforms.uAlpha,
                     { value: 1 },
-                    {
-                        value: 0.5,
-                        duration: 1.5
-                    }
+                    { value: 0.5, duration: 1.5 }
                 )
                 gsap.fromTo(this.fence.material.uniforms.uBorderAlpha,
                     { value: 1 },
-                    {
-                        value: 0.5,
-                        duration: 1.5
-                    }
+                    { value: 0.5, duration: 1.5 }
                 )
             }
         })
 
-        // TODO: Key animation and rest
+        // key icon animation
+        if (this.hasKey && _showKey) {
+            this.key.container.position.z = this.key.shownZ;
+            gsap.fromTo(this.key.icon.material, { opacity: 1 }, { opacity: 0.5, duration: 1.5 });
+            gsap.fromTo(this.key.enter.material, { opacity: 1 }, { opacity: 0.5, duration: 1.5 });
+        }
+
+        // TODO: Sounds
+
+        // trigger interaction result
+        this.trigger('interact');
     }
 
     // TODO:

@@ -205,13 +205,141 @@ export default class Area extends EventEmitter {
         this.trigger('interact');
     }
 
-    // TODO:
-    setInteractions() {
+    // Behaviour for entering area.
+    in(_showKey = true) {
+        this.isIn = true; // FIXME: maybe this should be after active check??
 
+        // return if not active
+        if (!this.active) {
+            return;
+        }
+
+        // fence animation
+        gsap.killTweensOf(this.fence.mesh.position);
+        gsap.to(this.fence.mesh.position, {
+            duration: 0.35,
+            z: this.fence.offset,
+            ease: "back.out(3)" // FIXME: test back distance
+        })
+
+        // key animation
+        if (this.hasKey) {
+            gsap.killTweensOf(this.key.container.position);
+            gsap.killTweensOf(this.key.icon.material);
+            gsap.killTweensOf(this.key.enter.material);
+
+            if (_showKey) {
+                gsap.to(this.key.container.position, {
+                    duration: 0.35,
+                    z: this.key.shownZ,
+                    ease: "back.out(3)", // FIXME: test back distance
+                    delay: 0.1
+                })
+                gsap.to(this.key.icon.material, {
+                    duration: 0.35,
+                    opacity: 0.5,
+                    ease: "back.out(3)", // FIXME: test back distance
+                    delay: 0.1
+                })
+                gsap.to(this.key.enter.material, {
+                    duration: 0.35,
+                    opacity: 0.5,
+                    ease: "back.out(3)", // FIXME: test back distance
+                    delay: 0.1
+                })
+            }
+        }
+
+        // change cursor to click // FIXME: check if cursor is in the box or not
+        if (!this.config.touch) {
+            this.renderer.domElement.classList.add('has-cursor-pointer');
+        }
+
+        // trigger the in event
+        this.trigger('in');
+    }
+
+    // Behaviour for exiting area.
+    out () {
+        this.isIn = false;
+
+        // fence animation
+        gsap.killTweensOf(this.fence.mesh.position);
+        gsap.to(this.fence.mesh.position, {
+            duration: 0.35,
+            z: - this.fence.depth,
+            ease: "back.out(4)" // FIXME: test back distance
+        })
+
+        // key animation
+        if (this.hasKey) {
+            gsap.killTweensOf(this.key.container.position);
+            gsap.killTweensOf(this.key.icon.material);
+            gsap.killTweensOf(this.key.enter.material);
+
+            if (_showKey) {
+                gsap.to(this.key.container.position, {
+                    duration: 0.35,
+                    z: this.key.hiddenZ,
+                    ease: "back.out(4)", // FIXME: test back distance
+                    delay: 0.1
+                })
+                gsap.to(this.key.icon.material, {
+                    duration: 0.35,
+                    opacity: 0,
+                    ease: "back.out(4)", // FIXME: test back distance
+                    delay: 0.1
+                })
+                gsap.to(this.key.enter.material, {
+                    duration: 0.35,
+                    opacity: 0,
+                    ease: "back.out(4)", // FIXME: test back distance
+                    delay: 0.1
+                })
+            }
+        }
+
+        // change cursor to click // FIXME: check if cursor is in the box or not
+        if (!this.config.touch) {
+            this.renderer.domElement.classList.remove('has-cursor-pointer');
+        }
+
+        // trigger the out event
+        this.trigger('out');
     }
 
     // TODO:
-    setKey() {
+    setInteractions() {
+        // create mesh for detecting the mouse cursor
+        this.mouseMesh = new THREE.Mesh(
+            new THREE.PlaneBufferGeometry(this.halfExtents.x * 2, this.halfExtents.y * 2, 1, 1),
+            new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 })
+        )
+        this.mouseMesh.position.z = - 0.01;
+        this.mouseMesh.matrixAutoUpdate = false;
+        this.mouseMesh.updateMatrix();
+        this.container.add(this.mouseMesh);
 
+        this.time.on('update', () => {
+            if (this.testCar) { // if meant to detect car
+                // if the car is in the area
+                const isIn = Math.abs(this.car.position.x - this.position.x) < Math.abs(this.halfExtents.x) &&
+                             Math.abs(this.car.position.y - this.position.y) < Math.abs(this.halfExtents.y);
+                if (isIn !== this.isIn) { // if 'in' state has changed
+                    if (isIn) {
+                        this.in(!this.config.touch);
+                    } else {
+                        this.out();
+                    }
+                }
+            }
+        })
+
+        // interact if 'in' and key is pressed
+        window.addEventListener('keydown', (_event) => {
+            if ((_event.key === 'f' || _event.key === 'e' || _event.key === 'Enter') && this.isIn) {
+                this.interact();
+            }
+        })
     }
 }

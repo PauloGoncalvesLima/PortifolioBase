@@ -59,6 +59,10 @@ import envRoadSource from '../assets/models/env/road.glb';
 import envRoadCollisionSource from '../assets/models/env/collision.glb';
 import treeSource from '../assets/models/tree.glb';
 
+// Textures
+import areaEnterSource from '../assets/textures/enter.png';
+import areaKeyEnterSource from '../assets/textures/keyEnter.png';
+
 import piston_topSource from '../assets/img/piston_top.png';
 import piston_bottomSource from '../assets/img/piston_bottom.png';
 import piston_sideSource from '../assets/img/piston_side.png';
@@ -129,6 +133,10 @@ export default class Resources extends EventEmitter {
         { name: 'envRoad', source: envRoadSource},
         { name: 'envRoadCollision', source: envRoadCollisionSource},
         { name: 'tree', source: treeSource },
+
+        // Area Textures
+        { name: 'areaKeyEnter', source: areaKeyEnterSource, type: 'texture' },
+        { name: 'areaEnter', source: areaEnterSource, type: 'texture' },
 
         // Piston
         { name: 'piston_top', source: piston_topSource },

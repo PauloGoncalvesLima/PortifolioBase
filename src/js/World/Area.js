@@ -44,6 +44,18 @@ export default class Area extends EventEmitter {
         }
     }
 
+    // updates position and sizes
+    updateArea(_options) {
+        // postion
+        this.container.position.x = _options.position.x;
+        this.container.position.y = _options.position.y;
+
+        // sizes
+        this.halfExtents = _options.halfExtents;
+        this.setFloorBorder();
+        this.setFence();
+    }
+
     // Makes area interactable.
     activate() {
         this.active = true;
@@ -260,7 +272,7 @@ export default class Area extends EventEmitter {
     }
 
     // Behaviour for exiting area.
-    out () {
+    out() {
         this.isIn = false;
 
         // fence animation
@@ -308,7 +320,7 @@ export default class Area extends EventEmitter {
         this.trigger('out');
     }
 
-    // TODO:
+    // Enables in/out detection for car and creates mouse hitbox mesh.
     setInteractions() {
         // create mesh for detecting the mouse cursor
         this.mouseMesh = new THREE.Mesh(

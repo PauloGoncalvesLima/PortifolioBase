@@ -5,6 +5,7 @@ import Objects from './Objects.js';
 import Controls from './Controls.js';
 import Env from './Env.js';
 import Car from './Car.js';
+import Areas from './Areas.js';
 import Lights from './Lights.js';
 // Sections
 import InformationSection from './Sections/InformationSection.js';
@@ -39,7 +40,6 @@ export default class {
         // this.setSounds();
         this.setControls();
         // this.setFloor(); ?might not keep or change?
-        this.setAreas();
         // this.setStartingScreen();
         this.resources.on('ready', () => {
             console.log('scene is ready to load');
@@ -67,10 +67,11 @@ export default class {
         this.setObjects();
         this.setEnv();
         this.setCar();
+        this.setAreas();
         // this.areas.car = this.car; // ??
         // this.setTiles();
         // this.setWalls();
-        // this.setSections();
+        this.setSections();
         // this.setEasterEggs();
     }
 
@@ -248,5 +249,35 @@ export default class {
 
         // add car object to world container
         this.container.add(this.car.container);
+    }
+
+    /**
+     * Initializes special properties from each section.
+     */
+    setSections() {
+        this.sections = {};
+
+        // Generic options
+        const options = {
+            config: this.config,
+            time: this.time,
+            resources: this.resources,
+            camera: this.camera,
+            passes: this.passes,
+            objects: this.objects,
+            areas: this.areas,
+            zones: this.zones,
+            walls: this.walls,
+            tiles: this.tiles,
+            debug: this.debugFolder
+        }
+
+        // Info
+        this.sections.information = new InformationSection({
+            ...options,
+            x: 0,
+            y: 0
+        })
+        this.container.add(this.sections.information.container);
     }
 }

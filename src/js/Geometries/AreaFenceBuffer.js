@@ -115,8 +115,8 @@ function AreaFenceBufferGeometry(_width, _height, _depth) {
     this.setIndex(new THREE.BufferAttribute(indices, 1, false));
 
     // set attributes
-    this.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-    this.addAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    this.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    this.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
 }
 
 AreaFenceBufferGeometry.prototype = Object.create(THREE.BufferGeometry.prototype);

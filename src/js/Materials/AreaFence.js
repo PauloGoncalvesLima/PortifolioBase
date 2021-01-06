@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-import shaderFragment from '../../shaders/areaFloorBorder/fragment.glsl';
-import shaderVertex from '../../shaders/areaFloorBorder/vertex.glsl';
+import shaderFragment from '../../shaders/areaFence/fragment.glsl';
+import shaderVertex from '../../shaders/areaFence/vertex.glsl';
 
 export default function() {
     const uniforms = {

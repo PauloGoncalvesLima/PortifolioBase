@@ -73,6 +73,7 @@ export default class InformationSection {
 
         // updates area meta info for debugging
         this.links.update = () => {
+            let i = 0;
             for (const _item of this.links.items) {
                 _item.x = this.x + this.links.x + this.links.distanceBetween * i;
                 _item.y = this.y + this.links.y;
@@ -80,6 +81,7 @@ export default class InformationSection {
                     position: new THREE.Vector2(_item.x, _item.y),
                     halfExtents: new THREE.Vector2(this.links.halfExtents.x, this.links.halfExtents.y)
                 })
+                i++;
             }
         }
 

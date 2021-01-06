@@ -6,6 +6,7 @@ import AreaFloorBorderBufferGeometry from '../Geometries/AreaFloorBorderBuffer.j
 import AreaFenceBufferGeometry from '../Geometries/AreaFenceBuffer.js';
 import AreaFenceMaterial from '../Materials/AreaFence.js';
 import AreaFloorBordereMaterial from '../Materials/AreaFloorBorder.js';
+import { MeshBasicMaterial } from 'three';
 
 export default class Area extends EventEmitter {
     constructor(_options) {
@@ -15,6 +16,7 @@ export default class Area extends EventEmitter {
         this.config = _options.config;
         this.renderer = _options.renderer;
         this.resources = _options.resources;
+        this.camera = _options.camera;
         this.car = _options.car;
         this.sounds = _options.sounds;
         this.time = _options.time;
@@ -49,11 +51,18 @@ export default class Area extends EventEmitter {
         // postion
         this.container.position.x = _options.position.x;
         this.container.position.y = _options.position.y;
+        this.container.updateMatrix();
 
         // sizes
         this.halfExtents = _options.halfExtents;
-        this.setFloorBorder();
-        this.setFence();
+        this.floorBorder.geometry.dispose();
+        this.floorBorder.geometry = new AreaFloorBorderBufferGeometry(this.halfExtents.x * 2, this.halfExtents.y * 2, 0.25);
+        this.floorBorder.mesh.geometry = this.floorBorder.geometry;
+        this.floorBorder.mesh.updateMatrix();
+        this.fence.geometry.dispose();
+        this.fence.geometry = new AreaFenceBufferGeometry(this.halfExtents.x * 2, this.halfExtents.y * 2, this.fence.depth);
+        this.fence.mesh.geometry = this.fence.geometry;
+        this.fence.mesh.updateMatrix();
     }
 
     // Makes area interactable.
@@ -163,6 +172,14 @@ export default class Area extends EventEmitter {
         this.key.icon.mesh.matrixAutoUpdate = false
         this.key.icon.mesh.updateMatrix()
         this.key.container.add(this.key.icon.mesh)
+
+        // rotate to camera
+        this.time.on('update', () => {
+            let rotAng = (this.camera.instance.rotation.x >= 0) ? 
+                        Math.atan(this.camera.instance.rotation.y / this.camera.instance.rotation.x) :
+                        Math.PI + Math.atan(this.camera.instance.rotation.y / this.camera.instance.rotation.x);
+            this.key.container.rotation.z = rotAng;
+        })
     }
 
     // Triggers the area interaction result.
@@ -288,27 +305,24 @@ export default class Area extends EventEmitter {
             gsap.killTweensOf(this.key.container.position);
             gsap.killTweensOf(this.key.icon.material);
             gsap.killTweensOf(this.key.enter.material);
-
-            if (_showKey) {
-                gsap.to(this.key.container.position, {
-                    duration: 0.35,
-                    z: this.key.hiddenZ,
-                    ease: "back.out(4)", // FIXME: test back distance
-                    delay: 0.1
-                })
-                gsap.to(this.key.icon.material, {
-                    duration: 0.35,
-                    opacity: 0,
-                    ease: "back.out(4)", // FIXME: test back distance
-                    delay: 0.1
-                })
-                gsap.to(this.key.enter.material, {
-                    duration: 0.35,
-                    opacity: 0,
-                    ease: "back.out(4)", // FIXME: test back distance
-                    delay: 0.1
-                })
-            }
+            gsap.to(this.key.container.position, {
+                duration: 0.35,
+                z: this.key.hiddenZ,
+                ease: "back.out(4)", // FIXME: test back distance
+                delay: 0.1
+            })
+            gsap.to(this.key.icon.material, {
+                duration: 0.35,
+                opacity: 0,
+                ease: "back.out(4)", // FIXME: test back distance
+                delay: 0.1
+            })
+            gsap.to(this.key.enter.material, {
+                duration: 0.35,
+                opacity: 0,
+                ease: "back.out(4)", // FIXME: test back distance
+                delay: 0.1
+            })
         }
 
         // change cursor to click // FIXME: check if cursor is in the box or not

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 function AreaFloorBorderBufferGeometry(_width, _height, _thickness) {
-    THREE.BufferGeometry.call(this); // What it means? IDK
+    THREE.BufferGeometry.call(this);
 
     // parameters
     this.parameters = {

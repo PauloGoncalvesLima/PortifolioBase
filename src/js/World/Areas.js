@@ -98,6 +98,7 @@ export default class Areas {
             config: this.config,
             renderer: this.renderer,
             resources: this.resources,
+            camera: this.camera,
             car: this.car,
             sounds: this.sounds,
             time: this.time,
